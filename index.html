@@ -223,7 +223,6 @@ header{
   pointer-events:none;
 }
 
-/* Auto-verify loading state */
 .auto-verify-box{
   display:none;margin-top:16px;
   background:linear-gradient(135deg,rgba(124,111,247,.07),rgba(77,217,172,.04));
@@ -245,7 +244,6 @@ header{
   transition:width .3s ease;
 }
 
-/* Manual fallback */
 .manual-box{
   display:none;margin-top:16px;
   background:var(--card2);
@@ -396,7 +394,7 @@ footer{
           <div class="plat-check">✓</div>
           <span class="plat-icon">🔗</span>
           <span class="plat-name">Work.ink</span>
-          <span class="plat-time">Auto Redirect</span>
+          <span class="plat-time">Verified</span>
         </button>
       </div>
 
@@ -454,8 +452,8 @@ const SUPABASE_URL  = "https://zrxgabdxbczqhfiokulk.supabase.co"
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
 const HOURS_VALID   = 5
 
-// Yung Work.ink link mo
-const WORKINK_URL = "https://work.ink/2wCd/key-system"
+// Yung BAGONG regular monetized link (NOT Key System)
+const WORKINK_URL = "https://work.ink/2wCd/playback-hub-key"
 
 // Check for token in URL on page load (redirect back from Work.ink)
 window.addEventListener('load', () => {
@@ -490,7 +488,6 @@ window.addEventListener('load', () => {
 
 function startFlow() {
   // Open Work.ink in same tab (better for redirect back)
-  // Or new tab if you prefer
   window.location.href = WORKINK_URL
 }
 
