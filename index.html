@@ -7,342 +7,77 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cabinet+Grotesk:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#05050d;
-  --surface:#0c0c18;
-  --card:#101020;
-  --card2:#14142a;
-  --border:#1a1a35;
-  --border2:#252545;
-  --accent:#7c6ff7;
-  --accent2:#f06292;
-  --accent3:#4dd9ac;
-  --text:#e8e8f0;
-  --muted:#606080;
-  --mono:'Space Mono',monospace;
-  --sans:'Cabinet Grotesk','Syne',sans-serif;
-  --glow:rgba(124,111,247,.18);
-}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:var(--sans);min-height:100vh;
-  overflow-x:hidden;
-}
-
-.bg-orb{
-  position:fixed;pointer-events:none;z-index:0;
-  border-radius:50%;filter:blur(80px);
-}
+:root{--bg:#05050d;--surface:#0c0c18;--card:#101020;--card2:#14142a;--border:#1a1a35;--accent:#7c6ff7;--accent2:#f06292;--accent3:#4dd9ac;--text:#e8e8f0;--mono:'Space Mono',monospace;--sans:'Cabinet Grotesk',sans-serif;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+.bg-orb{position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(80px);}
 .bg-orb-1{width:500px;height:500px;top:-120px;left:-150px;background:radial-gradient(circle,rgba(124,111,247,.12),transparent 70%);}
 .bg-orb-2{width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(240,98,146,.09),transparent 70%);}
-.bg-grid{
-  position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    linear-gradient(rgba(124,111,247,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(124,111,247,.03) 1px,transparent 1px);
-  background-size:48px 48px;
-}
-.bg-noise{
-  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.3;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-}
-
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(124,111,247,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,111,247,.03) 1px,transparent 1px);background-size:48px 48px;}
 .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 20px 60px;}
-
-header{
-  padding:28px 0 0;
-  display:flex;align-items:center;gap:10px;
-}
-.logo-mark{
-  width:32px;height:32px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  border-radius:8px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:14px;font-weight:700;color:#fff;
-  box-shadow:0 0 16px rgba(124,111,247,.35);
-  flex-shrink:0;
-}
-.logo-name{
-  font-size:15px;font-weight:800;letter-spacing:-.2px;
-  color:var(--text);
-}
-.logo-name em{
-  font-style:normal;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-
+header{padding:28px 0 0;display:flex;align-items:center;gap:10px;}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-size:14px;font-weight:700;color:#fff;box-shadow:0 0 16px rgba(124,111,247,.35);}
+.logo-name{font-size:15px;font-weight:800;letter-spacing:-.2px;}
+.logo-name em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero{padding:52px 0 0;text-align:center;}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:10px;letter-spacing:2.5px;
-  text-transform:uppercase;color:var(--accent);
-  border:1px solid rgba(124,111,247,.25);
-  background:rgba(124,111,247,.06);
-  padding:6px 14px;border-radius:99px;margin-bottom:22px;
-}
-.hero-eyebrow::before{
-  content:'';width:5px;height:5px;border-radius:50%;
-  background:var(--accent);
-  animation:blink 2.4s ease infinite;
-}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);border:1px solid rgba(124,111,247,.25);background:rgba(124,111,247,.06);padding:6px 14px;border-radius:99px;margin-bottom:22px;}
+.hero-eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 2.4s ease infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-
-.hero h1{
-  font-size:clamp(2.2rem,7vw,3.6rem);
-  font-weight:900;line-height:1.05;
-  letter-spacing:-2px;
-  margin-bottom:16px;
-  color:var(--text);
-}
-.hero h1 .line2{
-  background:linear-gradient(110deg,var(--accent) 10%,var(--accent2) 60%,#fbbf24 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  display:block;
-}
-.hero-sub{
-  color:#70708a;font-size:15px;line-height:1.75;
-  max-width:380px;margin:0 auto;
-}
-.hero-sub strong{color:#a0a0c0;}
-
-.stats{
-  display:flex;justify-content:center;gap:0;
-  margin:32px 0 0;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;overflow:hidden;
-}
-.stat{
-  flex:1;padding:18px 12px;text-align:center;
-  border-right:1px solid var(--border);
-}
+.hero h1{font-size:clamp(2.2rem,7vw,3.6rem);font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:16px;}
+.hero h1 .line2{background:linear-gradient(110deg,var(--accent) 10%,var(--accent2) 60%,#fbbf24 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;}
+.hero-sub{color:#70708a;font-size:15px;line-height:1.75;max-width:380px;margin:0 auto;}
+.stats{display:flex;justify-content:center;gap:0;margin:32px 0 0;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.stat{flex:1;padding:18px 12px;text-align:center;border-right:1px solid var(--border);}
 .stat:last-child{border-right:none;}
-.stat-val{
-  font-size:20px;font-weight:900;
-  font-family:var(--mono);
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  display:block;margin-bottom:4px;
-}
+.stat-val{font-size:20px;font-weight:900;font-family:var(--mono);background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;margin-bottom:4px;}
 .stat-label{font-size:10px;color:#606080;letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);}
-
-.card{
-  margin-top:28px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:24px;
-  overflow:hidden;
-  position:relative;
-}
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
-}
+.card{margin-top:28px;background:var(--card);border:1px solid var(--border);border-radius:24px;overflow:hidden;position:relative;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);}
 .card-inner{padding:32px;}
-
-.section-label{
-  font-family:var(--mono);font-size:10px;
-  letter-spacing:2px;text-transform:uppercase;
-  color:#606080;margin-bottom:16px;
-  display:flex;align-items:center;gap:8px;
-}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#606080;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
-
 .platforms{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:20px;}
-.plat-btn{
-  padding:20px 14px 18px;
-  border-radius:14px;border:1.5px solid var(--border);
-  background:var(--surface);
-  cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  position:relative;overflow:hidden;
-  -webkit-tap-highlight-color:transparent;
-}
-.plat-btn::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(124,111,247,.08),transparent);
-  opacity:0;transition:opacity .2s;
-}
-.plat-btn:hover{
-  border-color:rgba(124,111,247,.45);
-  transform:translateY(-3px);
-  box-shadow:0 8px 24px rgba(124,111,247,.12);
-}
-.plat-btn:hover::after{opacity:1;}
-.plat-btn.selected{
-  border-color:var(--accent);
-  background:rgba(124,111,247,.1);
-  box-shadow:0 0 0 3px rgba(124,111,247,.12),0 8px 24px rgba(124,111,247,.15);
-}
-.plat-btn.selected::after{opacity:1;}
-.plat-check{
-  position:absolute;top:9px;right:10px;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--accent);color:#fff;
-  font-size:9px;display:none;place-items:center;
-  box-shadow:0 0 8px rgba(124,111,247,.5);
-}
-.plat-btn.selected .plat-check{display:grid;}
-.plat-icon{
-  font-size:28px;
-  filter:drop-shadow(0 0 8px rgba(124,111,247,.3));
-}
-.plat-name{font-size:14px;font-weight:800;letter-spacing:-.2px;}
-.plat-time{
-  font-size:10px;color:#606080;
-  font-family:var(--mono);
-  background:var(--card2);
-  padding:3px 8px;border-radius:99px;
-  border:1px solid var(--border);
-}
-
-.go-btn{
-  width:100%;padding:16px;
-  background:linear-gradient(135deg,var(--accent) 0%,#9d62f5 50%,var(--accent2) 100%);
-  background-size:200% auto;
-  color:#fff;border:none;border-radius:13px;
-  font-family:var(--sans);font-size:15px;font-weight:800;
-  cursor:pointer;transition:all .3s;
-  letter-spacing:-.2px;
-  position:relative;overflow:hidden;
-}
-.go-btn:disabled{
-  background:var(--card2);color:#404060;
-  cursor:not-allowed;transform:none!important;box-shadow:none!important;
-  border:1px solid var(--border);
-}
-.go-btn:not(:disabled):hover{
-  background-position:right center;
-  transform:translateY(-2px);
-  box-shadow:0 10px 32px rgba(124,111,247,.35);
-}
-.go-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 60%);
-  pointer-events:none;
-}
-
-.auto-verify-box{
-  display:none;margin-top:16px;
-  background:linear-gradient(135deg,rgba(124,111,247,.07),rgba(77,217,172,.04));
-  border:1px solid rgba(124,111,247,.2);
-  border-radius:14px;padding:22px;
-  text-align:center;
-}
-.auto-verify-box.show{display:block;animation:fadeUp .35s ease;}
+.plat-btn{padding:20px 14px 18px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface);display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;}
+.plat-btn.selected{border-color:var(--accent);background:rgba(124,111,247,.1);box-shadow:0 0 0 3px rgba(124,111,247,.12);}
+.plat-check{position:absolute;top:9px;right:10px;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:9px;display:grid;place-items:center;}
+.plat-icon{font-size:28px;filter:drop-shadow(0 0 8px rgba(124,111,247,.3));}
+.plat-name{font-size:14px;font-weight:800;}
+.plat-time{font-size:10px;color:#606080;font-family:var(--mono);background:var(--card2);padding:3px 8px;border-radius:99px;border:1px solid var(--border);}
+.go-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent) 0%,#9d62f5 50%,var(--accent2) 100%);background-size:200% auto;color:#fff;border:none;border-radius:13px;font-family:var(--sans);font-size:15px;font-weight:800;cursor:pointer;transition:all .3s;letter-spacing:-.2px;position:relative;overflow:hidden;}
+.go-btn:disabled{background:var(--card2);color:#404060;cursor:not-allowed;border:1px solid var(--border);}
+.go-btn:not(:disabled):hover{background-position:right center;transform:translateY(-2px);box-shadow:0 10px 32px rgba(124,111,247,.35);}
+.wait-box{display:none;margin-top:16px;background:linear-gradient(135deg,rgba(124,111,247,.07),rgba(77,217,172,.04));border:1px solid rgba(124,111,247,.2);border-radius:14px;padding:22px;text-align:center;}
+.wait-box.show{display:block;animation:fadeUp .35s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-.av-icon{font-size:28px;margin-bottom:10px;display:block;}
-.av-title{font-size:14px;font-weight:800;margin-bottom:6px;}
-.av-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
-
-.prog-track{height:3px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:16px;}
-.prog-fill{
-  height:100%;width:0%;border-radius:99px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  transition:width .3s ease;
-}
-
-.manual-box{
-  display:none;margin-top:16px;
-  background:var(--card2);
-  border:1px solid var(--border);
-  border-radius:14px;padding:22px;
-}
-.manual-box.show{display:block;animation:fadeUp .35s ease;}
-
-.m-title{font-size:14px;font-weight:800;margin-bottom:6px;}
-.m-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
-
-.token-input{
-  width:100%;padding:12px 14px;
-  background:var(--surface);color:var(--text);
-  border:1.5px solid var(--border);border-radius:10px;
-  font-family:var(--mono);font-size:13px;
-  margin-bottom:12px;outline:none;
-  transition:border-color .2s;
-}
-.token-input:focus{border-color:var(--accent);}
-.token-input::placeholder{color:#404060;}
-
-.verify-btn{
-  width:100%;padding:14px;
-  background:linear-gradient(135deg,var(--accent3),#00b87d);
-  color:#000;border:none;border-radius:10px;
-  font-family:var(--sans);font-size:14px;font-weight:800;
-  cursor:pointer;transition:all .22s;
-  letter-spacing:-.2px;
-}
-.verify-btn:hover:not(:disabled){
-  transform:translateY(-2px);
-  box-shadow:0 8px 22px rgba(77,217,172,.3);
-}
-.verify-btn:disabled{
-  opacity:.5;cursor:not-allowed;
-}
-
-.key-result{
-  display:none;margin-top:16px;
-  border-radius:14px;overflow:hidden;
-  border:1px solid rgba(77,217,172,.25);
-}
+.w-icon{font-size:28px;margin-bottom:10px;display:block;animation:float 3s ease infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.w-title{font-size:14px;font-weight:800;margin-bottom:6px;}
+.w-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
+.prog-track{height:4px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:16px;}
+.prog-fill{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s linear;}
+.timer-big{font-size:32px;font-weight:900;font-family:var(--mono);color:var(--accent);margin-bottom:12px;}
+.claim-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent3),#00b87d);color:#000;border:none;border-radius:10px;font-family:var(--sans);font-size:14px;font-weight:800;cursor:pointer;transition:all .22s;opacity:.35;pointer-events:none;letter-spacing:-.2px;}
+.claim-btn.ready{opacity:1;pointer-events:auto;}
+.claim-btn.ready:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(77,217,172,.3);}
+.check-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;color:#a0a0c0;}
+.check-row input{width:16px;height:16px;accent-color:var(--accent);}
+.hwid-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:#606080;text-align:center;}
+.hwid-box span{color:var(--accent);font-weight:700;}
+.key-result{display:none;margin-top:16px;border-radius:14px;overflow:hidden;border:1px solid rgba(77,217,172,.25);}
 .key-result.show{display:block;animation:fadeUp .4s ease;}
-.kr-top{
-  background:linear-gradient(90deg,rgba(77,217,172,.12),rgba(124,111,247,.08));
-  padding:14px 18px 12px;
-  display:flex;align-items:center;gap:8px;
-}
+.kr-top{background:linear-gradient(90deg,rgba(77,217,172,.12),rgba(124,111,247,.08));padding:14px 18px 12px;display:flex;align-items:center;gap:8px;}
 .kr-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);box-shadow:0 0 8px rgba(77,217,172,.5);}
 .kr-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--accent3);text-transform:uppercase;}
 .kr-body{background:var(--surface);padding:14px 18px;}
-.kr-key-row{
-  font-family:var(--mono);font-size:13px;
-  background:var(--card);border:1px solid var(--border);
-  border-radius:10px;padding:12px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  word-break:break-all;margin-bottom:10px;
-  letter-spacing:.5px;
-}
-.copy-btn{
-  background:rgba(124,111,247,.2);border:1px solid rgba(124,111,247,.3);
-  color:var(--accent);padding:6px 12px;border-radius:7px;
-  cursor:pointer;font-family:var(--mono);font-size:10px;
-  white-space:nowrap;transition:all .2s;flex-shrink:0;font-weight:700;
-  letter-spacing:1px;
-}
+.kr-key-row{font-family:var(--mono);font-size:13px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;word-break:break-all;margin-bottom:10px;letter-spacing:.5px;}
+.copy-btn{background:rgba(124,111,247,.2);border:1px solid rgba(124,111,247,.3);color:var(--accent);padding:6px 12px;border-radius:7px;cursor:pointer;font-family:var(--mono);font-size:10px;white-space:nowrap;transition:all .2s;flex-shrink:0;font-weight:700;letter-spacing:1px;}
 .copy-btn:hover{background:rgba(124,111,247,.35);}
-.kr-meta{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:11px;color:#60608a;font-family:var(--mono);
-}
-.kr-expiry-pill{
-  display:flex;align-items:center;gap:5px;
-  background:rgba(77,217,172,.08);border:1px solid rgba(77,217,172,.15);
-  padding:3px 10px;border-radius:99px;color:var(--accent3);
-}
-
-.error-msg{
-  display:none;margin-top:12px;
-  background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);
-  color:#f87171;border-radius:10px;padding:12px 16px;
-  font-size:12px;font-family:var(--mono);line-height:1.6;
-}
+.kr-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#60608a;font-family:var(--mono);}
+.kr-expiry-pill{display:flex;align-items:center;gap:5px;background:rgba(77,217,172,.08);border:1px solid rgba(77,217,172,.15);padding:3px 10px;border-radius:99px;color:var(--accent3);}
+.error-msg{display:none;margin-top:12px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);color:#f87171;border-radius:10px;padding:12px 16px;font-size:12px;font-family:var(--mono);line-height:1.6;}
 .error-msg.show{display:block;animation:fadeUp .3s ease;}
-
-.success-msg{
-  display:none;margin-top:12px;
-  background:rgba(77,217,172,.07);border:1px solid rgba(77,217,172,.2);
-  color:var(--accent3);border-radius:10px;padding:12px 16px;
-  font-size:12px;font-family:var(--mono);line-height:1.6;
-}
-.success-msg.show{display:block;animation:fadeUp .3s ease;}
-
-footer{
-  padding:28px 0 0;text-align:center;
-  font-size:11px;color:#404060;font-family:var(--mono);
-}
-
+.locked-msg{display:none;margin-top:12px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);color:#f87171;border-radius:10px;padding:12px 16px;font-size:12px;font-family:var(--mono);line-height:1.6;}
+.locked-msg.show{display:block;animation:fadeUp .3s ease;}
+footer{padding:28px 0 0;text-align:center;font-size:11px;color:#404060;font-family:var(--mono);}
 .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle;margin-right:7px;}
 @keyframes rot{to{transform:rotate(360deg)}}
 </style>
@@ -352,7 +87,6 @@ footer{
 <div class="bg-orb bg-orb-1"></div>
 <div class="bg-orb bg-orb-2"></div>
 <div class="bg-grid"></div>
-<div class="bg-noise"></div>
 
 <div class="wrap">
 
@@ -363,24 +97,12 @@ footer{
 
   <section class="hero">
     <div class="hero-eyebrow">Key System</div>
-    <h1>
-      Get Your
-      <span class="line2">Free Key</span>
-    </h1>
-    <p class="hero-sub">
-      Click below, complete the task,<br>
-      and get redirected back automatically.<br>
-    </p>
+    <h1>Get Your<span class="line2">Free Key</span></h1>
+    <p class="hero-sub">Complete the task on Work.ink,<br>wait for the timer, then claim your key.<br><strong>1 device only.</strong></p>
 
     <div class="stats">
-      <div class="stat">
-        <span class="stat-val">5H</span>
-        <span class="stat-label">Valid</span>
-      </div>
-      <div class="stat">
-        <span class="stat-val">Free</span>
-        <span class="stat-label">Cost</span>
-      </div>
+      <div class="stat"><span class="stat-val">5H</span><span class="stat-label">Valid</span></div>
+      <div class="stat"><span class="stat-val">1</span><span class="stat-label">Device</span></div>
     </div>
   </section>
 
@@ -390,57 +112,47 @@ footer{
       <div class="section-label">Key System</div>
 
       <div class="platforms">
-        <button class="plat-btn selected" id="btn-workink">
+        <button class="plat-btn selected">
           <div class="plat-check">✓</div>
           <span class="plat-icon">🔗</span>
           <span class="plat-name">Work.ink</span>
-          <span class="plat-time">Verified</span>
+          <span class="plat-time">HWID Locked</span>
         </button>
       </div>
 
-      <button class="go-btn" id="goBtn" onclick="startFlow()">
-        Get Key via Work.ink →
-      </button>
+      <button class="go-btn" id="goBtn" onclick="startFlow()">Get Key via Work.ink →</button>
 
-      <!-- Auto Verify Loading -->
-      <div class="auto-verify-box" id="autoVerifyBox">
-        <span class="av-icon">🔐</span>
-        <div class="av-title" id="avTitle">Verifying token...</div>
-        <div class="av-sub" id="avSub">Please wait while we validate your completion</div>
+      <!-- Waiting -->
+      <div class="wait-box" id="waitBox">
+        <span class="w-icon">⏳</span>
+        <div class="w-title">Complete Task in New Tab</div>
+        <div class="w-sub">Finish the offers on Work.ink, then return here.<br>Timer unlocks your key.</div>
+        <div class="timer-big" id="timerDisplay">45</div>
         <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
-      </div>
-
-      <!-- Manual Fallback -->
-      <div class="manual-box" id="manualBox">
-        <span class="v-icon">⌨️</span>
-        <div class="m-title">Manual Token Entry</div>
-        <div class="m-sub">If auto-redirect didn't work, paste your token here.</div>
-        <input type="text" class="token-input" id="tokenInput" placeholder="Paste token here..." autocomplete="off"/>
-        <button class="verify-btn" id="verifyBtn" onclick="manualVerify()">
-          Verify & Generate Key →
-        </button>
+        
+        <div class="hwid-box">Device ID: <span id="hwidDisplay">—</span></div>
+        
+        <label class="check-row">
+          <input type="checkbox" id="humanCheck" onchange="toggleClaim()">
+          I completed the task on Work.ink
+        </label>
+        <button class="claim-btn" id="claimBtn" onclick="generateKey()">Claim Key →</button>
       </div>
 
       <!-- Key Result -->
       <div class="key-result" id="keyResult">
-        <div class="kr-top">
-          <div class="kr-dot"></div>
-          <div class="kr-title">Key generated</div>
-        </div>
+        <div class="kr-top"><div class="kr-dot"></div><div class="kr-title">Key generated</div></div>
         <div class="kr-body">
-          <div class="kr-key-row">
-            <span id="keyText">—</span>
-            <button class="copy-btn" onclick="copyKey()">COPY</button>
-          </div>
+          <div class="kr-key-row"><span id="keyText">—</span><button class="copy-btn" onclick="copyKey()">COPY</button></div>
           <div class="kr-meta">
             <div class="kr-expiry-pill">⏱ <span id="keyExpiry">Expires in 5 hours</span></div>
-            <span>1 device locked</span>
+            <span id="deviceLock">Locked to this device</span>
           </div>
         </div>
       </div>
 
       <div class="error-msg" id="errorMsg"></div>
-      <div class="success-msg" id="successMsg"></div>
+      <div class="locked-msg" id="lockedMsg"></div>
     </div>
   </div>
 
@@ -451,117 +163,131 @@ footer{
 const SUPABASE_URL  = "https://zrxgabdxbczqhfiokulk.supabase.co"
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
 const HOURS_VALID   = 5
+const WAIT_SECONDS  = 45
 
-// Yung BAGONG regular monetized link (NOT Key System)
 const WORKINK_URL = "https://work.ink/2wCd/playback-hub-key"
 
-// Check for token in URL on page load (redirect back from Work.ink)
-window.addEventListener('load', () => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const incomingToken = urlParams.get('token') || urlParams.get('hash')
-  
-  // Remove token from URL (clean URL)
-  if (incomingToken && window.history.replaceState) {
-    window.history.replaceState({}, document.title, window.location.pathname)
-  }
-  
-  if (incomingToken) {
-    // Auto-verify detected token
-    document.getElementById('goBtn').style.display = 'none'
-    document.getElementById('autoVerifyBox').className = 'auto-verify-box show'
-    autoVerify(incomingToken)
-    return
-  }
+let timerInterval = null
+let timeLeft = WAIT_SECONDS
+let currentHWID = null
 
-  // Check existing key
-  const k = localStorage.getItem('ph_key')
-  const e = localStorage.getItem('ph_exp')
-  if (k && e && Date.now() < parseInt(e)) {
-    showKey(k, new Date(parseInt(e)).toISOString())
-    const btn = document.getElementById('goBtn')
-    btn.disabled = true
-    btn.textContent = '✓ Key already active'
-    btn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
-    btn.style.color = '#000'
-  }
+// Generate HWID on load
+window.addEventListener('load', async () => {
+  currentHWID = await getHWID()
+  document.getElementById('hwidDisplay').textContent = currentHWID
+  
+  // Check if this device already has an active key
+  await checkExistingKey()
 })
 
-function startFlow() {
-  // Open Work.ink in same tab (better for redirect back)
-  window.location.href = WORKINK_URL
+async function getHWID() {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  ctx.textBaseline = 'top'
+  ctx.font = '14px Arial'
+  ctx.fillText('PlaybackHub', 2, 2)
+  const canvasHash = canvas.toDataURL()
+  
+  const components = [
+    navigator.userAgent,
+    navigator.language,
+    screen.colorDepth,
+    screen.width + 'x' + screen.height,
+    new Date().getTimezoneOffset(),
+    canvasHash,
+    navigator.hardwareConcurrency || 'unknown',
+    navigator.platform || 'unknown'
+  ]
+  
+  let hash = 0
+  const str = components.join('|')
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  return 'HWID-' + Math.abs(hash).toString(16).toUpperCase().substring(0, 12)
 }
 
-async function autoVerify(token) {
-  const fill = document.getElementById('progFill')
-  const title = document.getElementById('avTitle')
-  const sub = document.getElementById('avSub')
-  
-  fill.style.width = '30%'
-  
+async function checkExistingKey() {
   try {
-    const result = await verifyWorkinkToken(token)
-    fill.style.width = '70%'
+    // Check localStorage first
+    const k = localStorage.getItem('ph_key')
+    const e = localStorage.getItem('ph_exp')
+    const h = localStorage.getItem('ph_hwid')
     
-    if (result.valid !== true) {
-      throw new Error('Invalid or expired token.')
+    if (k && e && Date.now() < parseInt(e) && h === currentHWID) {
+      // Same device, valid key
+      showKey(k, new Date(parseInt(e)).toISOString())
+      const btn = document.getElementById('goBtn')
+      btn.disabled = true
+      btn.textContent = '✓ Key active on this device'
+      btn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
+      btn.style.color = '#000'
+      return
     }
     
-    fill.style.width = '100%'
-    title.textContent = 'Token verified!'
-    sub.textContent = 'Generating your key...'
+    // Check Supabase for this HWID
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/key?hwid=eq.${currentHWID}&expires_at=gt.${new Date().toISOString()}&order=expires_at.desc&limit=1`, {
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`
+      }
+    })
     
-    await generateKey()
-    
+    if (res.ok) {
+      const data = await res.json()
+      if (data.length > 0) {
+        // Found active key for this device
+        localStorage.setItem('ph_key', data[0].key)
+        localStorage.setItem('ph_exp', new Date(data[0].expires_at).getTime().toString())
+        localStorage.setItem('ph_hwid', currentHWID)
+        showKey(data[0].key, data[0].expires_at)
+        const btn = document.getElementById('goBtn')
+        btn.disabled = true
+        btn.textContent = '✓ Key active on this device'
+        btn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
+        btn.style.color = '#000'
+      }
+    }
   } catch(e) {
-    fill.style.width = '100%'
-    fill.style.background = 'linear-gradient(90deg,#ef4444,#f87171)'
-    title.textContent = 'Verification failed'
-    sub.textContent = e.message || 'Token invalid. Try manual entry below.'
-    showError(e.message || 'Auto-verification failed.')
-    
-    // Show manual fallback after 2s
-    setTimeout(() => {
-      document.getElementById('autoVerifyBox').style.display = 'none'
-      document.getElementById('manualBox').className = 'manual-box show'
-      document.getElementById('tokenInput').value = token
-    }, 2000)
+    console.log('Key check error:', e)
   }
 }
 
-async function manualVerify() {
-  const token = document.getElementById('tokenInput').value.trim()
-  const verifyBtn = document.getElementById('verifyBtn')
-  const errorEl = document.getElementById('errorMsg')
-  const successEl = document.getElementById('successMsg')
-  
-  errorEl.className = 'error-msg'
-  successEl.className = 'success-msg'
-  
-  if (!token) {
-    showError('Please enter a token.')
-    return
-  }
-  
-  verifyBtn.disabled = true
-  verifyBtn.innerHTML = '<span class="spin"></span>Verifying...'
-  
-  try {
-    const result = await verifyWorkinkToken(token)
-    if (result.valid !== true) throw new Error('Invalid token.')
-    
-    await generateKey()
-    
-  } catch(e) {
-    verifyBtn.disabled = false
-    verifyBtn.textContent = 'Verify & Generate Key →'
-    showError(e.message || 'Verification failed.')
-  }
+function startFlow() {
+  window.open(WORKINK_URL, '_blank')
+  document.getElementById('waitBox').className = 'wait-box show'
+  document.getElementById('goBtn').disabled = true
+  document.getElementById('goBtn').textContent = 'Task opened — complete it in new tab'
+  startTimer()
 }
 
-async function verifyWorkinkToken(token) {
-  const res = await fetch(`https://work.ink/_api/v2/token/isValid/${token}?deleteToken=1`)
-  if (!res.ok) throw new Error('Work.ink API error')
-  return await res.json()
+function startTimer() {
+  const fill = document.getElementById('progFill')
+  const display = document.getElementById('timerDisplay')
+  
+  fill.style.width = '100%'
+  fill.style.transition = `width ${WAIT_SECONDS}s linear`
+  void fill.offsetWidth
+  fill.style.width = '0%'
+  
+  timerInterval = setInterval(() => {
+    timeLeft--
+    display.textContent = Math.max(0, timeLeft)
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval)
+      toggleClaim()
+    }
+  }, 1000)
+}
+
+function toggleClaim() {
+  const checked = document.getElementById('humanCheck').checked
+  const ready = checked && timeLeft <= 0
+  const btn = document.getElementById('claimBtn')
+  if (ready) btn.classList.add('ready')
+  else btn.classList.remove('ready')
 }
 
 function genKey() {
@@ -571,30 +297,56 @@ function genKey() {
 }
 
 async function generateKey() {
-  const key = genKey()
-  const expires = new Date(); expires.setHours(expires.getHours() + HOURS_VALID)
+  const btn = document.getElementById('claimBtn')
+  const errorEl = document.getElementById('errorMsg')
+  const lockedEl = document.getElementById('lockedMsg')
+  errorEl.className = 'error-msg'
+  lockedEl.className = 'locked-msg'
   
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/key`, {
-    method:'POST',
-    headers:{
-      'apikey':SUPABASE_ANON,
-      'Authorization':`Bearer ${SUPABASE_ANON}`,
-      'Content-Type':'application/json',
-      'Prefer':'return=minimal'
-    },
-    body: JSON.stringify({key, expires_at: expires.toISOString()})
-  })
+  if (timeLeft > 0) {
+    showError('Please wait for the timer to finish.')
+    return
+  }
+  if (!document.getElementById('humanCheck').checked) {
+    showError('Please confirm you completed the task.')
+    return
+  }
   
-  if (!res.ok && res.status !== 201) throw new Error('Database error')
+  btn.innerHTML = '<span class="spin"></span>Generating...'
   
-  localStorage.setItem('ph_key', key)
-  localStorage.setItem('ph_exp', expires.getTime().toString())
-  
-  // Hide all boxes
-  document.getElementById('autoVerifyBox').style.display = 'none'
-  document.getElementById('manualBox').style.display = 'none'
-  
-  showKey(key, expires.toISOString())
+  try {
+    const key = genKey()
+    const expires = new Date(); expires.setHours(expires.getHours() + HOURS_VALID)
+    
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/key`, {
+      method:'POST',
+      headers:{
+        'apikey':SUPABASE_ANON,
+        'Authorization':`Bearer ${SUPABASE_ANON}`,
+        'Content-Type':'application/json',
+        'Prefer':'return=minimal'
+      },
+      body: JSON.stringify({
+        key: key,
+        expires_at: expires.toISOString(),
+        hwid: currentHWID,
+        device_name: navigator.platform || 'Unknown'
+      })
+    })
+    
+    if (!res.ok && res.status !== 201) throw new Error('DB error')
+    
+    localStorage.setItem('ph_key', key)
+    localStorage.setItem('ph_exp', expires.getTime().toString())
+    localStorage.setItem('ph_hwid', currentHWID)
+    
+    document.getElementById('waitBox').style.display = 'none'
+    showKey(key, expires.toISOString())
+    
+  } catch(e) {
+    btn.innerHTML = 'Claim Key →'
+    showError('Failed to generate key. Try again.')
+  }
 }
 
 function showKey(key, iso) {
@@ -611,18 +363,22 @@ function showError(msg) {
   el.className = 'error-msg show'
 }
 
+function showLocked(msg) {
+  const el = document.getElementById('lockedMsg')
+  el.textContent = '🔒 ' + msg
+  el.className = 'locked-msg show'
+}
+
 function copyKey() {
   navigator.clipboard.writeText(document.getElementById('keyText').textContent).then(() => {
     const btn = document.querySelector('.copy-btn')
     btn.textContent = 'COPIED!'
     btn.style.background = 'rgba(77,217,172,.3)'
     btn.style.color = 'var(--accent3)'
-    btn.style.borderColor = 'rgba(77,217,172,.4)'
     setTimeout(() => {
       btn.textContent = 'COPY'
       btn.style.background = ''
       btn.style.color = ''
-      btn.style.borderColor = ''
     }, 2000)
   })
 }
