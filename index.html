@@ -18,7 +18,7 @@
   --accent2:#f06292;
   --accent3:#4dd9ac;
   --text:#e8e8f0;
-  --muted:#6060808;
+  --muted:#606080;
   --mono:'Space Mono',monospace;
   --sans:'Cabinet Grotesk','Syne',sans-serif;
   --glow:rgba(124,111,247,.18);
@@ -30,7 +30,6 @@ body{
   overflow-x:hidden;
 }
 
-/* ── BACKGROUND ── */
 .bg-orb{
   position:fixed;pointer-events:none;z-index:0;
   border-radius:50%;filter:blur(80px);
@@ -51,7 +50,6 @@ body{
 
 .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 20px 60px;}
 
-/* ── HEADER ── */
 header{
   padding:28px 0 0;
   display:flex;align-items:center;gap:10px;
@@ -74,7 +72,6 @@ header{
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
-/* ── HERO ── */
 .hero{padding:52px 0 0;text-align:center;}
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:8px;
@@ -109,7 +106,6 @@ header{
 }
 .hero-sub strong{color:#a0a0c0;}
 
-/* ── STATS ROW ── */
 .stats{
   display:flex;justify-content:center;gap:0;
   margin:32px 0 0;
@@ -131,7 +127,6 @@ header{
 }
 .stat-label{font-size:10px;color:#606080;letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);}
 
-/* ── MAIN CARD ── */
 .card{
   margin-top:28px;
   background:var(--card);
@@ -140,7 +135,6 @@ header{
   overflow:hidden;
   position:relative;
 }
-/* top accent line */
 .card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
@@ -150,13 +144,12 @@ header{
 .section-label{
   font-family:var(--mono);font-size:10px;
   letter-spacing:2px;text-transform:uppercase;
-  color:#5050708;margin-bottom:16px;
-  display:flex;align-items:center;gap:8px;color:#606080;
+  color:#606080;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
 }
 .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* ── PLATFORM BUTTONS ── */
-.platforms{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.platforms{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:20px;}
 .plat-btn{
   padding:20px 14px 18px;
   border-radius:14px;border:1.5px solid var(--border);
@@ -204,7 +197,6 @@ header{
   border:1px solid var(--border);
 }
 
-/* ── GO BUTTON ── */
 .go-btn{
   width:100%;padding:16px;
   background:linear-gradient(135deg,var(--accent) 0%,#9d62f5 50%,var(--accent2) 100%);
@@ -231,42 +223,67 @@ header{
   pointer-events:none;
 }
 
-/* ── WAITING ── */
-.waiting-box{
+/* Auto-verify loading state */
+.auto-verify-box{
   display:none;margin-top:16px;
   background:linear-gradient(135deg,rgba(124,111,247,.07),rgba(77,217,172,.04));
   border:1px solid rgba(124,111,247,.2);
   border-radius:14px;padding:22px;
   text-align:center;
 }
-.waiting-box.show{display:block;animation:fadeUp .35s ease;}
+.auto-verify-box.show{display:block;animation:fadeUp .35s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.w-icon{font-size:28px;margin-bottom:10px;display:block;animation:float 3s ease infinite;}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.w-title{font-size:14px;font-weight:800;margin-bottom:6px;}
-.w-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
 
-/* progress bar */
+.av-icon{font-size:28px;margin-bottom:10px;display:block;}
+.av-title{font-size:14px;font-weight:800;margin-bottom:6px;}
+.av-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
+
 .prog-track{height:3px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:16px;}
 .prog-fill{
-  height:100%;width:100%;border-radius:99px;
+  height:100%;width:0%;border-radius:99px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
-  transition:width .6s linear;
+  transition:width .3s ease;
 }
 
-.claim-btn{
-  padding:12px 32px;
+/* Manual fallback */
+.manual-box{
+  display:none;margin-top:16px;
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:14px;padding:22px;
+}
+.manual-box.show{display:block;animation:fadeUp .35s ease;}
+
+.m-title{font-size:14px;font-weight:800;margin-bottom:6px;}
+.m-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
+
+.token-input{
+  width:100%;padding:12px 14px;
+  background:var(--surface);color:var(--text);
+  border:1.5px solid var(--border);border-radius:10px;
+  font-family:var(--mono);font-size:13px;
+  margin-bottom:12px;outline:none;
+  transition:border-color .2s;
+}
+.token-input:focus{border-color:var(--accent);}
+.token-input::placeholder{color:#404060;}
+
+.verify-btn{
+  width:100%;padding:14px;
   background:linear-gradient(135deg,var(--accent3),#00b87d);
   color:#000;border:none;border-radius:10px;
   font-family:var(--sans);font-size:14px;font-weight:800;
   cursor:pointer;transition:all .22s;
-  opacity:.35;pointer-events:none;
   letter-spacing:-.2px;
 }
-.claim-btn.ready{opacity:1;pointer-events:auto;}
-.claim-btn.ready:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(77,217,172,.3);}
+.verify-btn:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(77,217,172,.3);
+}
+.verify-btn:disabled{
+  opacity:.5;cursor:not-allowed;
+}
 
-/* ── KEY RESULT ── */
 .key-result{
   display:none;margin-top:16px;
   border-radius:14px;overflow:hidden;
@@ -307,7 +324,6 @@ header{
   padding:3px 10px;border-radius:99px;color:var(--accent3);
 }
 
-/* ── ERROR ── */
 .error-msg{
   display:none;margin-top:12px;
   background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);
@@ -316,14 +332,19 @@ header{
 }
 .error-msg.show{display:block;animation:fadeUp .3s ease;}
 
-
+.success-msg{
+  display:none;margin-top:12px;
+  background:rgba(77,217,172,.07);border:1px solid rgba(77,217,172,.2);
+  color:var(--accent3);border-radius:10px;padding:12px 16px;
+  font-size:12px;font-family:var(--mono);line-height:1.6;
+}
+.success-msg.show{display:block;animation:fadeUp .3s ease;}
 
 footer{
   padding:28px 0 0;text-align:center;
   font-size:11px;color:#404060;font-family:var(--mono);
 }
 
-/* SPINNER */
 .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle;margin-right:7px;}
 @keyframes rot{to{transform:rotate(360deg)}}
 </style>
@@ -349,9 +370,8 @@ footer{
       <span class="line2">Free Key</span>
     </h1>
     <p class="hero-sub">
-      Pick one platform, complete a quick task,<br>
-      and get your key instantly.<br>
-
+      Click below, complete the task,<br>
+      and get redirected back automatically.<br>
     </p>
 
     <div class="stats">
@@ -369,32 +389,38 @@ footer{
   <div class="card">
     <div class="card-inner">
 
-      <div class="section-label">Choose platform</div>
+      <div class="section-label">Key System</div>
 
       <div class="platforms">
-        <button class="plat-btn" id="btn-linkvertise" onclick="selectPlatform('linkvertise')">
-          <div class="plat-check">✓</div>
-          <span class="plat-icon">⚡</span>
-          <span class="plat-name">Linkvertise</span>
-        </button>
-        <button class="plat-btn" id="btn-workink" onclick="selectPlatform('workink')">
+        <button class="plat-btn selected" id="btn-workink">
           <div class="plat-check">✓</div>
           <span class="plat-icon">🔗</span>
           <span class="plat-name">Work.ink</span>
+          <span class="plat-time">Auto Redirect</span>
         </button>
       </div>
 
-      <button class="go-btn" id="goBtn" disabled onclick="openTask()">
-        Select a platform first
+      <button class="go-btn" id="goBtn" onclick="startFlow()">
+        Get Key via Work.ink →
       </button>
 
-      <!-- Waiting -->
-      <div class="waiting-box" id="waitingBox">
-        <span class="w-icon">🔐</span>
-        <div class="w-title">Complete the task in the new tab</div>
-        <div class="w-sub" id="waitingSub">Verifying task completion — claim unlocks in 30s</div>
+      <!-- Auto Verify Loading -->
+      <div class="auto-verify-box" id="autoVerifyBox">
+        <span class="av-icon">🔐</span>
+        <div class="av-title" id="avTitle">Verifying token...</div>
+        <div class="av-sub" id="avSub">Please wait while we validate your completion</div>
         <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
-        <button class="claim-btn" id="claimBtn" onclick="generateKey()">Claim Key →</button>
+      </div>
+
+      <!-- Manual Fallback -->
+      <div class="manual-box" id="manualBox">
+        <span class="v-icon">⌨️</span>
+        <div class="m-title">Manual Token Entry</div>
+        <div class="m-sub">If auto-redirect didn't work, paste your token here.</div>
+        <input type="text" class="token-input" id="tokenInput" placeholder="Paste token here..." autocomplete="off"/>
+        <button class="verify-btn" id="verifyBtn" onclick="manualVerify()">
+          Verify & Generate Key →
+        </button>
       </div>
 
       <!-- Key Result -->
@@ -416,9 +442,9 @@ footer{
       </div>
 
       <div class="error-msg" id="errorMsg"></div>
+      <div class="success-msg" id="successMsg"></div>
     </div>
   </div>
-
 
   <footer>Playback Hub © 2026</footer>
 </div>
@@ -427,67 +453,118 @@ footer{
 const SUPABASE_URL  = "https://zrxgabdxbczqhfiokulk.supabase.co"
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
 const HOURS_VALID   = 5
-const WAIT_SECONDS  = 30
 
-// ─── PALITAN NG LINKS MO ───
-const PLATFORM_URLS = {
-  linkvertise: "https://link-target.net/5218671/bcY0hwDssBFS",
-  workink:     "https://work.ink/2wCd/key"
-}
+// Yung Work.ink link mo
+const WORKINK_URL = "https://work.ink/2wCd/key-system"
 
-let selectedPlatform = null
-let timerInterval    = null
-
-// Restore session
+// Check for token in URL on page load (redirect back from Work.ink)
 window.addEventListener('load', () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const incomingToken = urlParams.get('token') || urlParams.get('hash')
+  
+  // Remove token from URL (clean URL)
+  if (incomingToken && window.history.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname)
+  }
+  
+  if (incomingToken) {
+    // Auto-verify detected token
+    document.getElementById('goBtn').style.display = 'none'
+    document.getElementById('autoVerifyBox').className = 'auto-verify-box show'
+    autoVerify(incomingToken)
+    return
+  }
+
+  // Check existing key
   const k = localStorage.getItem('ph_key')
   const e = localStorage.getItem('ph_exp')
   if (k && e && Date.now() < parseInt(e)) {
     showKey(k, new Date(parseInt(e)).toISOString())
     const btn = document.getElementById('goBtn')
     btn.disabled = true
-    btn.textContent = '✓ Key already active this session'
+    btn.textContent = '✓ Key already active'
     btn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
     btn.style.color = '#000'
   }
 })
 
-function selectPlatform(p) {
-  selectedPlatform = p
-  document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('selected'))
-  document.getElementById(`btn-${p}`).classList.add('selected')
-  const btn = document.getElementById('goBtn')
-  btn.disabled = false
-  btn.textContent = `Continue with ${p === 'linkvertise' ? 'Linkvertise' : 'Work.ink'} →`
+function startFlow() {
+  // Open Work.ink in same tab (better for redirect back)
+  // Or new tab if you prefer
+  window.location.href = WORKINK_URL
 }
 
-function openTask() {
-  if (!selectedPlatform) return
-  window.open(PLATFORM_URLS[selectedPlatform], '_blank')
-  document.getElementById('waitingBox').className = 'waiting-box show'
-  document.getElementById('goBtn').disabled = true
-  document.getElementById('goBtn').textContent = 'Task opened — complete it in the new tab'
-  document.querySelectorAll('.plat-btn').forEach(b => { b.disabled = true; b.style.opacity = '.5' })
-  startTimer()
-}
-
-function startTimer() {
-  let elapsed = 0
-  const fill  = document.getElementById('progFill')
-  const sub   = document.getElementById('waitingSub')
-  const claim = document.getElementById('claimBtn')
-  timerInterval = setInterval(() => {
-    elapsed++
-    fill.style.width = Math.max(0, 100 - (elapsed / WAIT_SECONDS * 100)) + '%'
-    const left = WAIT_SECONDS - elapsed
-    if (left > 0) {
-      sub.textContent = `Verifying task completion — claim unlocks in ${left}s`
-    } else {
-      clearInterval(timerInterval)
-      sub.textContent = "All good! Click below to claim your key."
-      claim.classList.add('ready')
+async function autoVerify(token) {
+  const fill = document.getElementById('progFill')
+  const title = document.getElementById('avTitle')
+  const sub = document.getElementById('avSub')
+  
+  fill.style.width = '30%'
+  
+  try {
+    const result = await verifyWorkinkToken(token)
+    fill.style.width = '70%'
+    
+    if (result.valid !== true) {
+      throw new Error('Invalid or expired token.')
     }
-  }, 1000)
+    
+    fill.style.width = '100%'
+    title.textContent = 'Token verified!'
+    sub.textContent = 'Generating your key...'
+    
+    await generateKey()
+    
+  } catch(e) {
+    fill.style.width = '100%'
+    fill.style.background = 'linear-gradient(90deg,#ef4444,#f87171)'
+    title.textContent = 'Verification failed'
+    sub.textContent = e.message || 'Token invalid. Try manual entry below.'
+    showError(e.message || 'Auto-verification failed.')
+    
+    // Show manual fallback after 2s
+    setTimeout(() => {
+      document.getElementById('autoVerifyBox').style.display = 'none'
+      document.getElementById('manualBox').className = 'manual-box show'
+      document.getElementById('tokenInput').value = token
+    }, 2000)
+  }
+}
+
+async function manualVerify() {
+  const token = document.getElementById('tokenInput').value.trim()
+  const verifyBtn = document.getElementById('verifyBtn')
+  const errorEl = document.getElementById('errorMsg')
+  const successEl = document.getElementById('successMsg')
+  
+  errorEl.className = 'error-msg'
+  successEl.className = 'success-msg'
+  
+  if (!token) {
+    showError('Please enter a token.')
+    return
+  }
+  
+  verifyBtn.disabled = true
+  verifyBtn.innerHTML = '<span class="spin"></span>Verifying...'
+  
+  try {
+    const result = await verifyWorkinkToken(token)
+    if (result.valid !== true) throw new Error('Invalid token.')
+    
+    await generateKey()
+    
+  } catch(e) {
+    verifyBtn.disabled = false
+    verifyBtn.textContent = 'Verify & Generate Key →'
+    showError(e.message || 'Verification failed.')
+  }
+}
+
+async function verifyWorkinkToken(token) {
+  const res = await fetch(`https://work.ink/_api/v2/token/isValid/${token}?deleteToken=1`)
+  if (!res.ok) throw new Error('Work.ink API error')
+  return await res.json()
 }
 
 function genKey() {
@@ -497,41 +574,30 @@ function genKey() {
 }
 
 async function generateKey() {
-  const claimBtn = document.getElementById('claimBtn')
-  const errorEl  = document.getElementById('errorMsg')
-  errorEl.className = 'error-msg'
-  claimBtn.disabled = true
-  claimBtn.innerHTML = '<span class="spin"></span>Generating...'
-
-  try {
-    const key     = genKey()
-    const expires = new Date(); expires.setHours(expires.getHours() + HOURS_VALID)
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/key`, {
-      method:'POST',
-      headers:{
-        'apikey':SUPABASE_ANON,
-        'Authorization':`Bearer ${SUPABASE_ANON}`,
-        'Content-Type':'application/json',
-        'Prefer':'return=minimal'
-      },
-      body: JSON.stringify({key, expires_at: expires.toISOString()})
-    })
-    if (!res.ok && res.status !== 201) throw new Error('DB error')
-    localStorage.setItem('ph_key', key)
-    localStorage.setItem('ph_exp', expires.getTime().toString())
-    showKey(key, expires.toISOString())
-    document.getElementById('waitingBox').style.display = 'none'
-    const goBtn = document.getElementById('goBtn')
-    goBtn.disabled = true
-    goBtn.textContent = '✓ Key Generated!'
-    goBtn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
-    goBtn.style.color = '#000'
-  } catch(e) {
-    claimBtn.disabled = false
-    claimBtn.textContent = 'Try Again'
-    errorEl.textContent = '❌ Failed to generate key. Check connection and try again.'
-    errorEl.className = 'error-msg show'
-  }
+  const key = genKey()
+  const expires = new Date(); expires.setHours(expires.getHours() + HOURS_VALID)
+  
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/key`, {
+    method:'POST',
+    headers:{
+      'apikey':SUPABASE_ANON,
+      'Authorization':`Bearer ${SUPABASE_ANON}`,
+      'Content-Type':'application/json',
+      'Prefer':'return=minimal'
+    },
+    body: JSON.stringify({key, expires_at: expires.toISOString()})
+  })
+  
+  if (!res.ok && res.status !== 201) throw new Error('Database error')
+  
+  localStorage.setItem('ph_key', key)
+  localStorage.setItem('ph_exp', expires.getTime().toString())
+  
+  // Hide all boxes
+  document.getElementById('autoVerifyBox').style.display = 'none'
+  document.getElementById('manualBox').style.display = 'none'
+  
+  showKey(key, expires.toISOString())
 }
 
 function showKey(key, iso) {
@@ -540,6 +606,12 @@ function showKey(key, iso) {
   document.getElementById('keyExpiry').textContent =
     d.toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})
   document.getElementById('keyResult').className = 'key-result show'
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg')
+  el.textContent = '❌ ' + msg
+  el.className = 'error-msg show'
 }
 
 function copyKey() {
