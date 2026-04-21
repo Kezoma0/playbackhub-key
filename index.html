@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Playback Hub — Get Key</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cabinet+Grotesk:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05050d;
+  --surface:#0c0c18;
+  --card:#101020;
+  --card2:#14142a;
+  --border:#1a1a35;
+  --border2:#252545;
+  --accent:#7c6ff7;
+  --accent2:#f06292;
+  --accent3:#4dd9ac;
+  --text:#e8e8f0;
+  --muted:#6060808;
+  --mono:'Space Mono',monospace;
+  --sans:'Cabinet Grotesk','Syne',sans-serif;
+  --glow:rgba(124,111,247,.18);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--sans);min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── BACKGROUND ── */
+.bg-orb{
+  position:fixed;pointer-events:none;z-index:0;
+  border-radius:50%;filter:blur(80px);
+}
+.bg-orb-1{width:500px;height:500px;top:-120px;left:-150px;background:radial-gradient(circle,rgba(124,111,247,.12),transparent 70%);}
+.bg-orb-2{width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(240,98,146,.09),transparent 70%);}
+.bg-grid{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(124,111,247,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(124,111,247,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.bg-noise{
+  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.3;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 20px 60px;}
+
+/* ── HEADER ── */
+header{
+  padding:28px 0 0;
+  display:flex;align-items:center;gap:10px;
+}
+.logo-mark{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:8px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:14px;font-weight:700;color:#fff;
+  box-shadow:0 0 16px rgba(124,111,247,.35);
+  flex-shrink:0;
+}
+.logo-name{
+  font-size:15px;font-weight:800;letter-spacing:-.2px;
+  color:var(--text);
+}
+.logo-name em{
+  font-style:normal;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ── HERO ── */
+.hero{padding:52px 0 0;text-align:center;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--accent);
+  border:1px solid rgba(124,111,247,.25);
+  background:rgba(124,111,247,.06);
+  padding:6px 14px;border-radius:99px;margin-bottom:22px;
+}
+.hero-eyebrow::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--accent);
+  animation:blink 2.4s ease infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero h1{
+  font-size:clamp(2.2rem,7vw,3.6rem);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-2px;
+  margin-bottom:16px;
+  color:var(--text);
+}
+.hero h1 .line2{
+  background:linear-gradient(110deg,var(--accent) 10%,var(--accent2) 60%,#fbbf24 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+}
+.hero-sub{
+  color:#70708a;font-size:15px;line-height:1.75;
+  max-width:380px;margin:0 auto;
+}
+.hero-sub strong{color:#a0a0c0;}
+
+/* ── STATS ROW ── */
+.stats{
+  display:flex;justify-content:center;gap:0;
+  margin:32px 0 0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+}
+.stat{
+  flex:1;padding:18px 12px;text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat:last-child{border-right:none;}
+.stat-val{
+  font-size:20px;font-weight:900;
+  font-family:var(--mono);
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;margin-bottom:4px;
+}
+.stat-label{font-size:10px;color:#606080;letter-spacing:1px;text-transform:uppercase;font-family:var(--mono);}
+
+/* ── MAIN CARD ── */
+.card{
+  margin-top:28px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  overflow:hidden;
+  position:relative;
+}
+/* top accent line */
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
+}
+.card-inner{padding:32px;}
+
+.section-label{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;
+  color:#5050708;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;color:#606080;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── PLATFORM BUTTONS ── */
+.platforms{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.plat-btn{
+  padding:20px 14px 18px;
+  border-radius:14px;border:1.5px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  position:relative;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+.plat-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(124,111,247,.08),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.plat-btn:hover{
+  border-color:rgba(124,111,247,.45);
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(124,111,247,.12);
+}
+.plat-btn:hover::after{opacity:1;}
+.plat-btn.selected{
+  border-color:var(--accent);
+  background:rgba(124,111,247,.1);
+  box-shadow:0 0 0 3px rgba(124,111,247,.12),0 8px 24px rgba(124,111,247,.15);
+}
+.plat-btn.selected::after{opacity:1;}
+.plat-check{
+  position:absolute;top:9px;right:10px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  font-size:9px;display:none;place-items:center;
+  box-shadow:0 0 8px rgba(124,111,247,.5);
+}
+.plat-btn.selected .plat-check{display:grid;}
+.plat-icon{
+  font-size:28px;
+  filter:drop-shadow(0 0 8px rgba(124,111,247,.3));
+}
+.plat-name{font-size:14px;font-weight:800;letter-spacing:-.2px;}
+.plat-time{
+  font-size:10px;color:#606080;
+  font-family:var(--mono);
+  background:var(--card2);
+  padding:3px 8px;border-radius:99px;
+  border:1px solid var(--border);
+}
+
+/* ── GO BUTTON ── */
+.go-btn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--accent) 0%,#9d62f5 50%,var(--accent2) 100%);
+  background-size:200% auto;
+  color:#fff;border:none;border-radius:13px;
+  font-family:var(--sans);font-size:15px;font-weight:800;
+  cursor:pointer;transition:all .3s;
+  letter-spacing:-.2px;
+  position:relative;overflow:hidden;
+}
+.go-btn:disabled{
+  background:var(--card2);color:#404060;
+  cursor:not-allowed;transform:none!important;box-shadow:none!important;
+  border:1px solid var(--border);
+}
+.go-btn:not(:disabled):hover{
+  background-position:right center;
+  transform:translateY(-2px);
+  box-shadow:0 10px 32px rgba(124,111,247,.35);
+}
+.go-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 60%);
+  pointer-events:none;
+}
+
+/* ── WAITING ── */
+.waiting-box{
+  display:none;margin-top:16px;
+  background:linear-gradient(135deg,rgba(124,111,247,.07),rgba(77,217,172,.04));
+  border:1px solid rgba(124,111,247,.2);
+  border-radius:14px;padding:22px;
+  text-align:center;
+}
+.waiting-box.show{display:block;animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.w-icon{font-size:28px;margin-bottom:10px;display:block;animation:float 3s ease infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.w-title{font-size:14px;font-weight:800;margin-bottom:6px;}
+.w-sub{font-size:12px;color:#60608a;font-family:var(--mono);margin-bottom:16px;line-height:1.6;}
+
+/* progress bar */
+.prog-track{height:3px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:16px;}
+.prog-fill{
+  height:100%;width:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .6s linear;
+}
+
+.claim-btn{
+  padding:12px 32px;
+  background:linear-gradient(135deg,var(--accent3),#00b87d);
+  color:#000;border:none;border-radius:10px;
+  font-family:var(--sans);font-size:14px;font-weight:800;
+  cursor:pointer;transition:all .22s;
+  opacity:.35;pointer-events:none;
+  letter-spacing:-.2px;
+}
+.claim-btn.ready{opacity:1;pointer-events:auto;}
+.claim-btn.ready:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(77,217,172,.3);}
+
+/* ── KEY RESULT ── */
+.key-result{
+  display:none;margin-top:16px;
+  border-radius:14px;overflow:hidden;
+  border:1px solid rgba(77,217,172,.25);
+}
+.key-result.show{display:block;animation:fadeUp .4s ease;}
+.kr-top{
+  background:linear-gradient(90deg,rgba(77,217,172,.12),rgba(124,111,247,.08));
+  padding:14px 18px 12px;
+  display:flex;align-items:center;gap:8px;
+}
+.kr-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);box-shadow:0 0 8px rgba(77,217,172,.5);}
+.kr-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--accent3);text-transform:uppercase;}
+.kr-body{background:var(--surface);padding:14px 18px;}
+.kr-key-row{
+  font-family:var(--mono);font-size:13px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  word-break:break-all;margin-bottom:10px;
+  letter-spacing:.5px;
+}
+.copy-btn{
+  background:rgba(124,111,247,.2);border:1px solid rgba(124,111,247,.3);
+  color:var(--accent);padding:6px 12px;border-radius:7px;
+  cursor:pointer;font-family:var(--mono);font-size:10px;
+  white-space:nowrap;transition:all .2s;flex-shrink:0;font-weight:700;
+  letter-spacing:1px;
+}
+.copy-btn:hover{background:rgba(124,111,247,.35);}
+.kr-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;color:#60608a;font-family:var(--mono);
+}
+.kr-expiry-pill{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(77,217,172,.08);border:1px solid rgba(77,217,172,.15);
+  padding:3px 10px;border-radius:99px;color:var(--accent3);
+}
+
+/* ── ERROR ── */
+.error-msg{
+  display:none;margin-top:12px;
+  background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);
+  color:#f87171;border-radius:10px;padding:12px 16px;
+  font-size:12px;font-family:var(--mono);line-height:1.6;
+}
+.error-msg.show{display:block;animation:fadeUp .3s ease;}
+
+
+
+footer{
+  padding:28px 0 0;text-align:center;
+  font-size:11px;color:#404060;font-family:var(--mono);
+}
+
+/* SPINNER */
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle;margin-right:7px;}
+@keyframes rot{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+
+<div class="wrap">
+
+  <header>
+    <div class="logo-mark">P</div>
+    <div class="logo-name">Playback<em>Hub</em></div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Key System</div>
+    <h1>
+      Get Your
+      <span class="line2">Free Key</span>
+    </h1>
+    <p class="hero-sub">
+      Pick one platform, complete a quick task,<br>
+      and get your key instantly.<br>
+
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-val">5H</span>
+        <span class="stat-label">Valid</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">Free</span>
+        <span class="stat-label">Cost</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="card">
+    <div class="card-inner">
+
+      <div class="section-label">Choose platform</div>
+
+      <div class="platforms">
+        <button class="plat-btn" id="btn-linkvertise" onclick="selectPlatform('linkvertise')">
+          <div class="plat-check">✓</div>
+          <span class="plat-icon">⚡</span>
+          <span class="plat-name">Linkvertise</span>
+        </button>
+        <button class="plat-btn" id="btn-workink" onclick="selectPlatform('workink')">
+          <div class="plat-check">✓</div>
+          <span class="plat-icon">🔗</span>
+          <span class="plat-name">Work.ink</span>
+        </button>
+      </div>
+
+      <button class="go-btn" id="goBtn" disabled onclick="openTask()">
+        Select a platform first
+      </button>
+
+      <!-- Waiting -->
+      <div class="waiting-box" id="waitingBox">
+        <span class="w-icon">🔐</span>
+        <div class="w-title">Complete the task in the new tab</div>
+        <div class="w-sub" id="waitingSub">Verifying task completion — claim unlocks in 30s</div>
+        <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+        <button class="claim-btn" id="claimBtn" onclick="generateKey()">Claim Key →</button>
+      </div>
+
+      <!-- Key Result -->
+      <div class="key-result" id="keyResult">
+        <div class="kr-top">
+          <div class="kr-dot"></div>
+          <div class="kr-title">Key generated</div>
+        </div>
+        <div class="kr-body">
+          <div class="kr-key-row">
+            <span id="keyText">—</span>
+            <button class="copy-btn" onclick="copyKey()">COPY</button>
+          </div>
+          <div class="kr-meta">
+            <div class="kr-expiry-pill">⏱ <span id="keyExpiry">Expires in 5 hours</span></div>
+            <span>1 device locked</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
+  </div>
+
+
+  <footer>Playback Hub © 2026</footer>
+</div>
+
+<script>
+const SUPABASE_URL  = "https://zrxgabdxbczqhfiokulk.supabase.co"
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
+const HOURS_VALID   = 5
+const WAIT_SECONDS  = 30
+
+// ─── PALITAN NG LINKS MO ───
+const PLATFORM_URLS = {
+  linkvertise: "https://linkvertise.com/YOUR_LINK_HERE",
+  workink:     "https://work.ink/YOUR_LINK_HERE"
+}
+
+let selectedPlatform = null
+let timerInterval    = null
+
+// Restore session
+window.addEventListener('load', () => {
+  const k = localStorage.getItem('ph_key')
+  const e = localStorage.getItem('ph_exp')
+  if (k && e && Date.now() < parseInt(e)) {
+    showKey(k, new Date(parseInt(e)).toISOString())
+    const btn = document.getElementById('goBtn')
+    btn.disabled = true
+    btn.textContent = '✓ Key already active this session'
+    btn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
+    btn.style.color = '#000'
+  }
+})
+
+function selectPlatform(p) {
+  selectedPlatform = p
+  document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('selected'))
+  document.getElementById(`btn-${p}`).classList.add('selected')
+  const btn = document.getElementById('goBtn')
+  btn.disabled = false
+  btn.textContent = `Continue with ${p === 'linkvertise' ? 'Linkvertise' : 'Work.ink'} →`
+}
+
+function openTask() {
+  if (!selectedPlatform) return
+  window.open(PLATFORM_URLS[selectedPlatform], '_blank')
+  document.getElementById('waitingBox').className = 'waiting-box show'
+  document.getElementById('goBtn').disabled = true
+  document.getElementById('goBtn').textContent = 'Task opened — complete it in the new tab'
+  document.querySelectorAll('.plat-btn').forEach(b => { b.disabled = true; b.style.opacity = '.5' })
+  startTimer()
+}
+
+function startTimer() {
+  let elapsed = 0
+  const fill  = document.getElementById('progFill')
+  const sub   = document.getElementById('waitingSub')
+  const claim = document.getElementById('claimBtn')
+  timerInterval = setInterval(() => {
+    elapsed++
+    fill.style.width = Math.max(0, 100 - (elapsed / WAIT_SECONDS * 100)) + '%'
+    const left = WAIT_SECONDS - elapsed
+    if (left > 0) {
+      sub.textContent = `Verifying task completion — claim unlocks in ${left}s`
+    } else {
+      clearInterval(timerInterval)
+      sub.textContent = "All good! Click below to claim your key."
+      claim.classList.add('ready')
+    }
+  }, 1000)
+}
+
+function genKey() {
+  const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  const r = n => Array.from({length:n},()=>c[Math.floor(Math.random()*c.length)]).join('')
+  return `FOX-${r(4)}-${r(4)}-${r(4)}-${r(4)}`
+}
+
+async function generateKey() {
+  const claimBtn = document.getElementById('claimBtn')
+  const errorEl  = document.getElementById('errorMsg')
+  errorEl.className = 'error-msg'
+  claimBtn.disabled = true
+  claimBtn.innerHTML = '<span class="spin"></span>Generating...'
+
+  try {
+    const key     = genKey()
+    const expires = new Date(); expires.setHours(expires.getHours() + HOURS_VALID)
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/key`, {
+      method:'POST',
+      headers:{
+        'apikey':SUPABASE_ANON,
+        'Authorization':`Bearer ${SUPABASE_ANON}`,
+        'Content-Type':'application/json',
+        'Prefer':'return=minimal'
+      },
+      body: JSON.stringify({key, expires_at: expires.toISOString()})
+    })
+    if (!res.ok && res.status !== 201) throw new Error('DB error')
+    localStorage.setItem('ph_key', key)
+    localStorage.setItem('ph_exp', expires.getTime().toString())
+    showKey(key, expires.toISOString())
+    document.getElementById('waitingBox').style.display = 'none'
+    const goBtn = document.getElementById('goBtn')
+    goBtn.disabled = true
+    goBtn.textContent = '✓ Key Generated!'
+    goBtn.style.background = 'linear-gradient(135deg,#4dd9ac,#00b87d)'
+    goBtn.style.color = '#000'
+  } catch(e) {
+    claimBtn.disabled = false
+    claimBtn.textContent = 'Try Again'
+    errorEl.textContent = '❌ Failed to generate key. Check connection and try again.'
+    errorEl.className = 'error-msg show'
+  }
+}
+
+function showKey(key, iso) {
+  document.getElementById('keyText').textContent = key
+  const d = new Date(iso)
+  document.getElementById('keyExpiry').textContent =
+    d.toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})
+  document.getElementById('keyResult').className = 'key-result show'
+}
+
+function copyKey() {
+  navigator.clipboard.writeText(document.getElementById('keyText').textContent).then(() => {
+    const btn = document.querySelector('.copy-btn')
+    btn.textContent = 'COPIED!'
+    btn.style.background = 'rgba(77,217,172,.3)'
+    btn.style.color = 'var(--accent3)'
+    btn.style.borderColor = 'rgba(77,217,172,.4)'
+    setTimeout(() => {
+      btn.textContent = 'COPY'
+      btn.style.background = ''
+      btn.style.color = ''
+      btn.style.borderColor = ''
+    }, 2000)
+  })
+}
+</script>
+</body>
+</html>
