@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playback Hub - Your Key</title>
+<style>
+body{background:#0a0a12;color:#fff;font-family:system-ui;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{background:#151520;border:1px solid #2a2a3a;border-radius:16px;padding:32px;width:90%;max-width:420px;text-align:center}
+h1{margin:0 0 8px;font-size:22px}
+p{color:#888;font-size:14px;margin:0 0 24px}
+.key-box{background:#0d7a5a20;border:1px solid #10b98140;border-radius:10px;padding:16px;margin:16px 0;font-family:monospace;font-size:18px;word-break:break-all;color:#10b981}
+.btn{background:#252530;color:#fff;border:1px solid #3a3a4a;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>✅ Playback Hub</h1>
+  <p>Your key is ready! Copy it below:</p>
+  <div class="key-box" id="keyText">Generating...</div>
+  <button class="btn" onclick="copyKey()">Copy Key</button>
+</div>
+
+<script>
+const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co"
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
+
+async function generateKey() {
+  const key = 'PBHUB-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + 
+              Math.random().toString(36).substring(2, 6).toUpperCase() + '-' +
+              Math.random().toString(36).substring(2, 6).toUpperCase()
+  
+  const expires = new Date()
+  expires.setHours(expires.getHours() + 5)
+  
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/key`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({key, expires_at: expires.toISOString()})
+    })
+    document.getElementById('keyText').textContent = key
+  } catch(e) {
+    document.getElementById('keyText').textContent = 'Error. Refresh page.'
+  }
+}
+
+function copyKey() {
+  navigator.clipboard.writeText(document.getElementById('keyText').textContent)
+  alert('Key copied!')
+}
+
+generateKey()
+</script>
+</body>
+</html>
