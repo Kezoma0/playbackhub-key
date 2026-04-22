@@ -12,11 +12,7 @@ p{color:#888;font-size:14px;margin:0 0 24px}
 .btn{display:block;width:100%;padding:14px;margin:8px 0;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none}
 .btn-primary{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
 .btn-secondary{background:#252530;color:#fff;border:1px solid #3a3a4a}
-.timer{background:#1a1a25;border:1px solid #2a2a3a;border-radius:10px;padding:16px;margin:16px 0;display:none}
-.timer.show{display:block}
-.key-box{background:#0d7a5a20;border:1px solid #10b98140;border-radius:10px;padding:16px;margin:16px 0;display:none}
-.key-box.show{display:block;font-family:monospace;font-size:18px;word-break:break-all}
-#keyText{color:#10b981}
+.note{color:#666;font-size:12px;margin-top:16px}
 </style>
 </head>
 <body>
@@ -24,83 +20,13 @@ p{color:#888;font-size:14px;margin:0 0 24px}
   <h1>🔒 Playback Hub</h1>
   <p>Complete a task to get your free key</p>
   
-  <button class="btn btn-primary" onclick="startTask('workink')">Continue with Work.ink</button>
-  <button class="btn btn-secondary" onclick="startTask('linkvertise')">Continue with Linkvertise</button>
+  <!-- >>> LAGAY WORK.INK LINK MO DITO <<< -->
+  <a class="btn btn-primary" href="https://work.ink/2wCd/key-system" target="_blank">Continue with Work.ink</a>
   
-  <div class="timer" id="timer">
-    <p>⏱ Complete the task in the new tab</p>
-    <p id="timerText">Wait 30s...</p>
-    <button class="btn btn-primary" id="claimBtn" onclick="generateKey()" disabled style="opacity:0.5">Claim Key</button>
-  </div>
+  <!-- >>> LAGAY LINKVERTISE LINK MO DITO <<< -->
+  <a class="btn btn-secondary" href="https://linkvertise.com/YOUR_LINK" target="_blank">Continue with Linkvertise</a>
   
-  <div class="key-box" id="keyBox">
-    <div id="keyText">—</div>
-    <button class="btn btn-secondary" onclick="copyKey()">Copy Key</button>
-  </div>
+  <p class="note">After completing the task, you will be redirected to the key page automatically.</p>
 </div>
-
-<script>
-const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co"
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
-const LINKS = {
-  workink: "https://work.ink/2wCd/playback-hub-key",      // PALITAN MO
-  linkvertise: "https://link-target.net/5218671/bcY0hwDssBFS"  // PALITAN MO
-}
-
-let countdown = 30
-let timerInterval
-
-function startTask(platform) {
-  window.open(LINKS[platform], '_blank')
-  document.getElementById('timer').classList.add('show')
-  const btn = document.getElementById('claimBtn')
-  btn.disabled = true
-  btn.style.opacity = '0.5'
-  
-  timerInterval = setInterval(() => {
-    countdown--
-    document.getElementById('timerText').textContent = `Wait ${countdown}s...`
-    if (countdown <= 0) {
-      clearInterval(timerInterval)
-      btn.disabled = false
-      btn.style.opacity = '1'
-      btn.textContent = 'Claim Key →'
-    }
-  }, 1000)
-}
-
-async function generateKey() {
-  const key = 'PBHUB-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + 
-              Math.random().toString(36).substring(2, 6).toUpperCase() + '-' +
-              Math.random().toString(36).substring(2, 6).toUpperCase()
-  
-  const expires = new Date()
-  expires.setHours(expires.getHours() + 5)
-  
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/key`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON,
-        'Authorization': `Bearer ${SUPABASE_ANON}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({key, expires_at: expires.toISOString()})
-    })
-    
-    document.getElementById('keyText').textContent = key
-    document.getElementById('keyBox').classList.add('show')
-    document.getElementById('timer').style.display = 'none'
-  } catch(e) {
-    alert('Failed to generate key. Try again.')
-  }
-}
-
-function copyKey() {
-  navigator.clipboard.writeText(document.getElementById('keyText').textContent)
-  alert('Key copied!')
-}
-</script>
 </body>
 </html>
