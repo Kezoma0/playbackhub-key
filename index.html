@@ -1,168 +1,106 @@
--- ============================================
--- PBHUB KEY SYSTEM v3.0 (SUPABASE)
--- ============================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playback Hub - Get Key</title>
+<style>
+body{background:#0a0a12;color:#fff;font-family:system-ui;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{background:#151520;border:1px solid #2a2a3a;border-radius:16px;padding:32px;width:90%;max-width:420px;text-align:center}
+h1{margin:0 0 8px;font-size:22px}
+p{color:#888;font-size:14px;margin:0 0 24px}
+.btn{display:block;width:100%;padding:14px;margin:8px 0;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
+.btn-secondary{background:#252530;color:#fff;border:1px solid #3a3a4a}
+.timer{background:#1a1a25;border:1px solid #2a2a3a;border-radius:10px;padding:16px;margin:16px 0;display:none}
+.timer.show{display:block}
+.key-box{background:#0d7a5a20;border:1px solid #10b98140;border-radius:10px;padding:16px;margin:16px 0;display:none}
+.key-box.show{display:block;font-family:monospace;font-size:18px;word-break:break-all}
+#keyText{color:#10b981}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🔒 Playback Hub</h1>
+  <p>Complete a task to get your free key</p>
+  
+  <button class="btn btn-primary" onclick="startTask('workink')">Continue with Work.ink</button>
+  <button class="btn btn-secondary" onclick="startTask('linkvertise')">Continue with Linkvertise</button>
+  
+  <div class="timer" id="timer">
+    <p>⏱ Complete the task in the new tab</p>
+    <p id="timerText">Wait 30s...</p>
+    <button class="btn btn-primary" id="claimBtn" onclick="generateKey()" disabled style="opacity:0.5">Claim Key</button>
+  </div>
+  
+  <div class="key-box" id="keyBox">
+    <div id="keyText">—</div>
+    <button class="btn btn-secondary" onclick="copyKey()">Copy Key</button>
+  </div>
+</div>
 
--- [SUPABASE CONFIG - SAME SA HTML MO]
-local SUPABASE_URL  = "https://zrxgabdxbczqhfiokulk.supabase.co"
-local SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
+<script>
+const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co"
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
+const LINKS = {
+  workink: "https://work.ink/2wCd/key-system",      // PALITAN MO
+  linkvertise: "https://linkvertise.com/YOUR_LINK"  // PALITAN MO
+}
 
--- [MONETIZATION LINK - ITO YUNG ISSHARE MO SA USERS]
-local GET_KEY_URL = "https://playbackhub-key.vercel.app" -- PALITAN KUNG IBA DOMAIN MO
+let countdown = 30
+let timerInterval
 
--- ============================================
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-local CoreGui = game:GetService("CoreGui")
-local UIS = game:GetService("UserInputService")
+function startTask(platform) {
+  window.open(LINKS[platform], '_blank')
+  document.getElementById('timer').classList.add('show')
+  const btn = document.getElementById('claimBtn')
+  btn.disabled = true
+  btn.style.opacity = '0.5'
+  
+  timerInterval = setInterval(() => {
+    countdown--
+    document.getElementById('timerText').textContent = `Wait ${countdown}s...`
+    if (countdown <= 0) {
+      clearInterval(timerInterval)
+      btn.disabled = false
+      btn.style.opacity = '1'
+      btn.textContent = 'Claim Key →'
+    }
+  }, 1000)
+}
 
-local SG = Instance.new("ScreenGui", CoreGui)
-SG.Name = "PBHUB_Key"
-SG.ResetOnSpawn = false
-
-local Main = Instance.new("Frame", SG)
-Main.Size = UDim2.new(0, 300, 0, 160)
-Main.Position = UDim2.new(0.5, -150, 0.5, -80)
-Main.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-Main.BorderSizePixel = 0
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
-
-local Title = Instance.new("TextLabel", Main)
-Title.Size = UDim2.new(1, 0, 0, 35)
-Title.Text = "🔒 Playback Hub"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.BackgroundTransparency = 1
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 15
-
-local Box = Instance.new("TextBox", Main)
-Box.Size = UDim2.new(0.9, 0, 0, 32)
-Box.Position = UDim2.new(0.05, 0, 0, 45)
-Box.PlaceholderText = "Enter key..."
-Box.Text = ""
-Box.TextColor3 = Color3.fromRGB(255, 255, 255)
-Box.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
-Box.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
-Box.Font = Enum.Font.Gotham
-Box.TextSize = 14
-Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 6)
-
-local Status = Instance.new("TextLabel", Main)
-Status.Size = UDim2.new(0.9, 0, 0, 18)
-Status.Position = UDim2.new(0.05, 0, 0, 82)
-Status.Text = ""
-Status.TextColor3 = Color3.fromRGB(255, 50, 50)
-Status.BackgroundTransparency = 1
-Status.Font = Enum.Font.Gotham
-Status.TextSize = 12
-
-local Submit = Instance.new("TextButton", Main)
-Submit.Size = UDim2.new(0.42, 0, 0, 32)
-Submit.Position = UDim2.new(0.05, 0, 0, 108)
-Submit.Text = "Submit"
-Submit.TextColor3 = Color3.fromRGB(255, 255, 255)
-Submit.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-Submit.Font = Enum.Font.GothamBold
-Submit.TextSize = 13
-Instance.new("UICorner", Submit).CornerRadius = UDim.new(0, 6)
-
-local GetKeyBtn = Instance.new("TextButton", Main)
-GetKeyBtn.Size = UDim2.new(0.42, 0, 0, 32)
-GetKeyBtn.Position = UDim2.new(0.53, 0, 0, 108)
-GetKeyBtn.Text = "Get Key"
-GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-GetKeyBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
-GetKeyBtn.Font = Enum.Font.GothamBold
-Submit.TextSize = 13
-Instance.new("UICorner", GetKeyBtn).CornerRadius = UDim.new(0, 6)
-
--- ============================================
--- DITO MO ILALAGAY YUNG SCRIPT MO
--- ============================================
-local function runScript()
-    -- >>> PASTE YOUR SCRIPT HERE <<<
-    -- loadstring(game:HttpGet("https://raw.githubusercontent.com/Kezoma0/test-script/refs/heads/main/test"))()
+async function generateKey() {
+  const key = 'PBHUB-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + 
+              Math.random().toString(36).substring(2, 6).toUpperCase() + '-' +
+              Math.random().toString(36).substring(2, 6).toUpperCase()
+  
+  const expires = new Date()
+  expires.setHours(expires.getHours() + 5)
+  
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/key`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({key, expires_at: expires.toISOString()})
+    })
     
-    print("Script loaded!")
-    SG:Destroy()
-end
+    document.getElementById('keyText').textContent = key
+    document.getElementById('keyBox').classList.add('show')
+    document.getElementById('timer').style.display = 'none'
+  } catch(e) {
+    alert('Failed to generate key. Try again.')
+  }
+}
 
--- ============================================
--- SUPABASE CHECK (DIRETSA DATABASE)
--- ============================================
-local function checkKey(key)
-    if key == "" then return false, "Enter key!" end
-    
-    local url = SUPABASE_URL .. "/rest/v1/key?key=eq." .. HttpService:UrlEncode(key) .. "&select=expires_at"
-    
-    local success, result = pcall(function()
-        -- Support for different executors (Synapse X, Fluxus, Krnl, etc.)
-        local req = (syn and syn.request) or (http and http.request) or (fluxus and fluxus.request) or request
-        if req then
-            local res = req({
-                Url = url,
-                Method = "GET",
-                Headers = {
-                    ["apikey"] = SUPABASE_ANON,
-                    ["Authorization"] = "Bearer " .. SUPABASE_ANON,
-                    ["Content-Type"] = "application/json"
-                }
-            })
-            return res.Body
-        else
-            -- Fallback (might not work without headers)
-            return game:HttpGet(url)
-        end
-    end)
-    
-    if not success then 
-        return false, "Connection failed! (" .. tostring(result) .. ")"
-    end
-    
-    local ok, data = pcall(function()
-        return HttpService:JSONDecode(result)
-    end)
-    
-    if not ok or type(data) ~= "table" or #data == 0 then 
-        return false, "Invalid key!" 
-    end
-    
-    -- Check expiration (5 hours from generation)
-    if data[1] and data[1].expires_at then
-        -- Simple check: if key exists in DB, valid (Supabase RLS handles cleanup)
-        return true
-    end
-    
-    return true
-end
-
-Submit.MouseButton1Click:Connect(function()
-    Status.Text = "Checking..."
-    Status.TextColor3 = Color3.fromRGB(255, 255, 100)
-    wait(0.3)
-    
-    local valid, err = checkKey(Box.Text)
-    if valid then
-        Status.Text = "Success!"
-        Status.TextColor3 = Color3.fromRGB(50, 255, 50)
-        wait(0.3)
-        runScript()
-    else
-        Status.Text = err
-        Status.TextColor3 = Color3.fromRGB(255, 50, 50)
-    end
-end)
-
-GetKeyBtn.MouseButton1Click:Connect(function()
-    pcall(function()
-        game:GetService("GuiService"):OpenBrowserWindow(GET_KEY_URL)
-    end)
-end)
-
--- Draggable
-local drag, di, ds, sp = false
-Title.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 then drag=true ds=i.Position sp=Main.Position end end)
-Title.InputChanged:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseMovement then di=i end end)
-UIS.InputChanged:Connect(function(i) if i==di and drag then local d=i.Position-ds Main.Position=UDim2.new(sp.X.Scale,sp.X.Offset+d.X,sp.Y.Scale,sp.Y.Offset+d.Y) end end)
-UIS.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 then drag=false end end)
-
-print("PBHUB Key System (Supabase) Ready")
+function copyKey() {
+  navigator.clipboard.writeText(document.getElementById('keyText').textContent)
+  alert('Key copied!')
+}
+</script>
+</body>
+</html>
