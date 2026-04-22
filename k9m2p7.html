@@ -11,10 +11,11 @@ h1{margin:0 0 8px;font-size:22px}
 p{color:#888;font-size:14px;margin:0 0 24px}
 .key-box{background:#0d7a5a20;border:1px solid #10b98140;border-radius:10px;padding:16px;margin:16px 0;font-family:monospace;font-size:18px;word-break:break-all;color:#10b981}
 .btn{background:#252530;color:#fff;border:1px solid #3a3a4a;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px}
+.error{color:#ff4444;font-size:16px;text-align:center;padding:20px}
 </style>
 </head>
 <body>
-<div class="box">
+<div class="box" id="box">
   <h1>✅ Playback Hub</h1>
   <p>Your key is ready! Copy it below:</p>
   <div class="key-box" id="keyText">Generating...</div>
@@ -22,6 +23,16 @@ p{color:#888;font-size:14px;margin:0 0 24px}
 </div>
 
 <script>
+// >>> SECURITY CHECK: DAPAT GALING SA WORK.INK <<<
+const urlParams = new URLSearchParams(window.location.search);
+const source = urlParams.get('source');
+
+if (source !== 'verified') {
+    document.body.innerHTML = '<div class="error"><h2>⚠️ Access Denied</h2><p>Complete the task first at playbackhub-key.vercel.app</p></div>';
+    throw new Error('Unauthorized');
+}
+// >>> HANGGANG DITO <<<
+
 const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co"
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk"
 
