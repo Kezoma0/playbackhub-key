@@ -1,28 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playback Hub - Get Key</title>
-<style>
-body{background:#0a0a12;color:#fff;font-family:system-ui;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
-.box{background:#151528;border:1px solid #2a2a3a;border-radius:16px;padding:32px;width:90%;max-width:420px;text-align:center}
-h1{margin:0 0 8px;font-size:22px}
-p{color:#888;font-size:14px;margin:0 0 24px}
-.btn{display:block;width:100%;padding:14px;margin:8px 0;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none}
-.btn-primary{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
-.note{color:#666;font-size:12px;margin-top:16px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playback Hub - Get Key</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a12;
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background: #151528;
+            border: 1px solid #2a2a3a;
+            border-radius: 16px;
+            padding: 40px 32px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        /* Key Animation */
+        .key-wrapper {
+            margin-bottom: 16px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .key-icon {
+            font-size: 42px;
+            display: inline-block;
+            animation: keyFloat 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.5));
+        }
+        @keyframes keyFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(5deg); }
+            50% { transform: translateY(-4px) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(-5deg); }
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin: 0 0 28px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: #fff;
+        }
+        .note {
+            color: #666;
+            font-size: 12px;
+            margin-top: 18px;
+            line-height: 1.5;
+        }
+        .expires {
+            color: #888;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+        .highlight {
+            color: #ec4899;
+            font-weight: 600;
+        }
+    </style>
+<base target="_blank">
 </head>
 <body>
-<div class="box">
-  <h1>🔑 Playback Hub</h1>
-  <p>Complete a task to get your free key</p>
+    <div class="box">
+        <div class="key-wrapper">
+            <span class="key-icon">🔑</span>
+        </div>
+        <h1>Playback Hub</h1>
+        <p class="subtitle">Complete a task to get your free key</p>
 
-  <!-- LINKVERTISE ONLY -->
-  <a class="btn btn-primary" href="https://link-target.net/5218671/QJ2TMI49KukZ" target="_blank">Continue with Linkvertise</a>
+        <a class="btn btn-primary" href="https://link-target.net/5218671/bcY0wD5ss8F5" target="_blank">
+            Continue with Linkvertise
+        </a>
 
-  <p class="note">After completing the task, you will be redirected to the key page automatically.</p>
-</div>
+        <p class="note">After completing the task, you will be redirected to the key page automatically.</p>
+        <p class="expires">Key expires in <span class="highlight">5 hours</span></p>
+    </div>
 </body>
 </html>
