@@ -14,7 +14,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
         }
         .box {
             background: #151528;
@@ -72,7 +71,7 @@
             color: #ccc;
             border: 1px solid #3a3a50;
         }
-        .btn-secondary:hover { background: #303048; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .btn-secondary:hover { background: #303048; }
         .note { color: #666; font-size: 12px; margin-top: 18px; line-height: 1.5; }
         .expires { color: #888; font-size: 13px; margin-top: 12px; }
         .highlight { color: #ec4899; font-weight: 600; }
@@ -87,11 +86,10 @@
         <h1>Playback Hub</h1>
         <p class="subtitle">Complete a task to get your free key</p>
 
-        <a class="btn btn-primary" href="https://work.ink/2wCd/playback-hub-key" onclick="return grantAccess(this.href);">
+        <a class="btn btn-primary" href="https://work.ink/2wCd/playback-hub-key" target="_blank" onclick="setSession()">
             Continue with Work.ink
         </a>
-
-        <a class="btn btn-secondary" href="https://link-target.net/5218671/bcY0wD5ss8F5" onclick="return grantAccess(this.href);">
+        <a class="btn btn-secondary" href="https://link-target.net/5218671/bcY0wD5ss8F5" target="_blank" onclick="setSession()">
             Continue with Linkvertise
         </a>
 
@@ -100,11 +98,11 @@
     </div>
 
     <script>
-        function grantAccess(url) {
-            localStorage.setItem('pbhub_gate', Date.now().toString());
-            localStorage.setItem('pbhub_gate_url', url);
-            window.open(url, '_blank');
-            return false;
+        function setSession() {
+            // Mark that user started the process
+            sessionStorage.setItem("pbhub_started", Date.now());
+            sessionStorage.removeItem("pbhub_key");
+            sessionStorage.removeItem("pbhub_key_expiry");
         }
     </script>
 </body>
