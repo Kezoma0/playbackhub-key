@@ -214,7 +214,13 @@
 
     <script>
         // ============================================
-        // ANTI-BYPASS GATE (LENIENT)
+        // SUPABASE CONFIG (NASA TAAS NA - FIX TDZ)
+        // ============================================
+        const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co";
+        const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk";
+
+        // ============================================
+        // ANTI-BYPASS GATE
         // ============================================
         const GATE_KEY = 'pbhub_gate';
         const GATE_TIMEOUT = 30 * 60 * 1000;
@@ -223,14 +229,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const hasSource = urlParams.has('source');
 
-            // PRIMARY: Check source param (from Linkvertise/Work.ink redirect)
             if (hasSource) {
-                // Also set gate for future refreshes
                 localStorage.setItem(GATE_KEY, Date.now().toString());
                 return true;
             }
 
-            // SECONDARY: Check localStorage gate
             const gate = localStorage.getItem(GATE_KEY);
             if (gate) {
                 const gateTime = parseInt(gate);
@@ -240,26 +243,8 @@
                 }
                 localStorage.removeItem(GATE_KEY);
             }
-
             return false;
         }
-
-        // Run gate check
-        if (!checkGate()) {
-            document.getElementById('contentState').style.display = 'none';
-            document.getElementById('blockedState').style.display = 'block';
-            setTimeout(function() {
-                window.location.href = 'index.html';
-            }, 3000);
-        } else {
-            init();
-        }
-
-        // ============================================
-        // SUPABASE CONFIG
-        // ============================================
-        const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co";
-        const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk";
 
         // ============================================
         // KEY GENERATOR
@@ -306,7 +291,7 @@
         }
 
         // ============================================
-        // SAVE KEY TO SUPABASE (with detailed error)
+        // SAVE KEY TO SUPABASE
         // ============================================
         async function saveKeyToSupabase(key, expiresAt) {
             try {
@@ -367,7 +352,7 @@
         }
 
         // ============================================
-        // MAIN: GENERATE & SAVE ON LOAD
+        // MAIN: GENERATE & SAVE
         // ============================================
         async function init() {
             const newKey = generateKey();
@@ -387,6 +372,19 @@
                 document.getElementById("errorDetail").textContent = result.error;
                 document.getElementById("debugInfo").textContent = "Key: " + newKey + " | Expires: " + expiresAt;
             }
+        }
+
+        // ============================================
+        // RUN GATE CHECK THEN INIT
+        // ============================================
+        if (!checkGate()) {
+            document.getElementById('contentState').style.display = 'none';
+            document.getElementById('blockedState').style.display = 'block';
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 3000);
+        } else {
+            init();
         }
     </script>
 </body>
