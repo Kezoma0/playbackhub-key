@@ -35,8 +35,6 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Key Animation */
         .key-wrapper {
             margin-bottom: 16px;
             height: 60px;
@@ -56,7 +54,6 @@
             50% { transform: translateY(-4px) rotate(0deg); }
             75% { transform: translateY(-10px) rotate(-5deg); }
         }
-
         h1 {
             margin: 0 0 8px;
             font-size: 24px;
@@ -67,7 +64,6 @@
             font-size: 14px;
             margin: 0 0 24px;
         }
-
         .key-box {
             background: #0d0d18;
             border: 2px solid #3a3a5a;
@@ -91,7 +87,6 @@
             0% { left: -100%; }
             100% { left: 100%; }
         }
-
         .key-text {
             font-family: 'Courier New', monospace;
             font-size: 20px;
@@ -109,7 +104,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         .btn {
             display: block;
             width: 100%;
@@ -138,7 +132,6 @@
             background: linear-gradient(135deg, #22c55e, #16a34a);
             box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
         }
-
         .timer {
             color: #888;
             font-size: 13px;
@@ -148,7 +141,6 @@
             color: #ec4899;
             font-weight: 600;
         }
-
         .warning {
             color: #666;
             font-size: 11px;
@@ -156,13 +148,11 @@
             padding-top: 12px;
             border-top: 1px solid #2a2a3a;
         }
-
         .error-box {
             color: #ff5555;
             font-size: 14px;
             padding: 20px;
         }
-
         .loading {
             display: inline-block;
             width: 24px;
@@ -176,48 +166,114 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .blocked {
+            color: #ff5555;
+            font-size: 16px;
+            padding: 30px 20px;
+        }
+        .blocked p {
+            margin-bottom: 16px;
+        }
+        .blocked a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+        }
     </style>
 <base target="_blank">
 </head>
 <body>
     <div class="box" id="mainBox">
-        <div class="key-wrapper">
-            <span class="key-icon">🔑</span>
-        </div>
-        <h1>Playback Hub</h1>
-        <p class="subtitle">Your key is ready!</p>
-
-        <div id="loadingState">
-            <div class="loading"></div>
-            <p style="color:#888; margin-top:12px; font-size:13px;">Generating secure key...</p>
+        <div id="blockedState" style="display:none;" class="blocked">
+            <p>🚫 Access Denied</p>
+            <p style="font-size:13px; color:#888;">You must complete a task first to get a key.</p>
+            <a href="index.html">Go to Landing Page</a>
         </div>
 
-        <div id="keyState" style="display:none;">
-            <div class="key-label">Your One-Time Key</div>
-            <div class="key-box">
-                <div class="key-text" id="keyDisplay">---</div>
+        <div id="contentState">
+            <div class="key-wrapper">
+                <span class="key-icon">🔑</span>
+            </div>
+            <h1>Playback Hub</h1>
+            <p class="subtitle">Your key is ready!</p>
+
+            <div id="loadingState">
+                <div class="loading"></div>
+                <p style="color:#888; margin-top:12px; font-size:13px;">Generating secure key...</p>
             </div>
 
-            <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">
-                📋 Copy Key
-            </button>
+            <div id="keyState" style="display:none;">
+                <div class="key-label">Your One-Time Key</div>
+                <div class="key-box">
+                    <div class="key-text" id="keyDisplay">---</div>
+                </div>
 
-            <p class="timer">
-                Expires in: <span id="countdown">5h 00m 00s</span>
-            </p>
+                <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">
+                    📋 Copy Key
+                </button>
 
-            <p class="warning">
-                ⚠️ This key is unique to this session. Refreshing will generate a new key.
-                <br>Old keys will expire automatically.
-            </p>
-        </div>
+                <p class="timer">
+                    Expires in: <span id="countdown">5h 00m 00s</span>
+                </p>
 
-        <div id="errorState" style="display:none;" class="error-box">
-            ❌ Failed to generate key. Please try again.
+                <p class="warning">
+                    ⚠️ This key is unique to this session. Refreshing will generate a new key.
+                    <br>Old keys will expire automatically.
+                </p>
+            </div>
+
+            <div id="errorState" style="display:none;" class="error-box">
+                ❌ Failed to generate key. Please try again.
+            </div>
         </div>
     </div>
 
     <script>
+        // ============================================
+        // ANTI-BYPASS GATE
+        // ============================================
+        const GATE_KEY = 'pbhub_gate';
+        const GATE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+
+        function checkGate() {
+            const gate = localStorage.getItem(GATE_KEY);
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasSource = urlParams.has('source');
+
+            if (!gate) {
+                return false;
+            }
+
+            const gateTime = parseInt(gate);
+            const now = Date.now();
+
+            // Gate expired (older than 30 min)
+            if ((now - gateTime) > GATE_TIMEOUT) {
+                localStorage.removeItem(GATE_KEY);
+                return false;
+            }
+
+            // Also check if source param exists (basic check)
+            if (!hasSource) {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Run gate check immediately
+        if (!checkGate()) {
+            document.getElementById('contentState').style.display = 'none';
+            document.getElementById('blockedState').style.display = 'block';
+            // Optional: auto-redirect after 3 seconds
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 3000);
+        } else {
+            // Gate valid, proceed
+            init();
+        }
+
         // ============================================
         // SUPABASE CONFIG
         // ============================================
@@ -254,7 +310,7 @@
             expiryTime = new Date();
             expiryTime.setHours(expiryTime.getHours() + 5);
 
-            setInterval(() => {
+            setInterval(function() {
                 const now = new Date();
                 const diff = expiryTime - now;
                 if (diff <= 0) {
@@ -264,8 +320,8 @@
                 const h = Math.floor(diff / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById("countdown").textContent = 
-                    h + "h " + (m<10?"0":"") + m + "m " + (s<10?"0":"") + s + "s";
+                document.getElementById("countdown").textContent =
+                    h + "h " + (m < 10 ? "0" : "") + m + "m " + (s < 10 ? "0" : "") + s + "s";
             }, 1000);
         }
 
@@ -299,12 +355,11 @@
                 const btn = document.getElementById("copyBtn");
                 btn.textContent = "✅ Copied!";
                 btn.classList.add("copied");
-                setTimeout(() => {
+                setTimeout(function() {
                     btn.textContent = "📋 Copy Key";
                     btn.classList.remove("copied");
                 }, 2000);
             } catch (err) {
-                // Fallback
                 const ta = document.createElement("textarea");
                 ta.value = keyText;
                 document.body.appendChild(ta);
@@ -314,7 +369,7 @@
                 const btn = document.getElementById("copyBtn");
                 btn.textContent = "✅ Copied!";
                 btn.classList.add("copied");
-                setTimeout(() => {
+                setTimeout(function() {
                     btn.textContent = "📋 Copy Key";
                     btn.classList.remove("copied");
                 }, 2000);
@@ -334,7 +389,6 @@
                     throw new Error("Failed to save");
                 }
 
-                // Show key
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("keyState").style.display = "block";
                 document.getElementById("keyDisplay").textContent = newKey;
@@ -346,9 +400,6 @@
                 document.getElementById("errorState").style.display = "block";
             }
         }
-
-        // Run on page load
-        init();
     </script>
 </body>
 </html>
