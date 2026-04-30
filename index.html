@@ -1,140 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playback Hub - Get Key</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #0a0a12;
-            color: #fff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .box {
-            background: #151528;
-            border: 1px solid #2a2a3a;
-            border-radius: 16px;
-            padding: 40px 32px;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-
-        /* Key Animation */
-        .key-wrapper {
-            margin-bottom: 16px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .key-icon {
-            font-size: 42px;
-            display: inline-block;
-            animation: keyFloat 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.5));
-        }
-        @keyframes keyFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-8px) rotate(5deg); }
-            50% { transform: translateY(-4px) rotate(0deg); }
-            75% { transform: translateY(-10px) rotate(-5deg); }
-        }
-
-        h1 {
-            margin: 0 0 8px;
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .subtitle {
-            color: #888;
-            font-size: 14px;
-            margin: 0 0 28px;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-        }
-        .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-        }
-        .btn-secondary {
-            background: #252538;
-            color: #ccc;
-            border: 1px solid #3a3a50;
-        }
-        .btn-secondary:hover {
-            background: #303048;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .note {
-            color: #666;
-            font-size: 12px;
-            margin-top: 18px;
-            line-height: 1.5;
-        }
-        .expires {
-            color: #888;
-            font-size: 13px;
-            margin-top: 12px;
-        }
-        .highlight {
-            color: #ec4899;
-            font-weight: 600;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playback Hub - Your Key</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{background:#151520;border:1px solid #2a2a3a;border-radius:16px;padding:32px;width:90%;max-width:420px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+h1{margin:0 0 8px;font-size:22px}
+p{color:#888;font-size:14px;margin:0 0 24px}
+.key-box{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:16px;margin:16px 0;font-family:monospace;font-size:18px;word-break:break-all;color:#10b981;letter-spacing:1px}
+.btn{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;width:100%;transition:transform 0.2s}
+.btn:hover{transform:translateY(-2px)}
+.timer{color:#f59e0b;font-size:13px;margin-top:10px}
+.error{color:#ff4444;font-size:16px;text-align:center;padding:20px}
+.used-tag{color:#ef4444;font-size:12px;margin-top:8px}
+</style>
 <base target="_blank">
 </head>
 <body>
-    <div class="box">
-        <div class="key-wrapper">
-            <span class="key-icon">🔑</span>
-        </div>
-        <h1>Playback Hub</h1>
-        <p class="subtitle">Complete a task to get your free key</p>
+<div class="box" id="box">
+  <h1>Playback Hub</h1>
+  <p>Your key is ready! Copy it below:</p>
+  <div class="key-box" id="keyText">Checking...</div>
+  <button class="btn" onclick="copyKey()">Copy Key</button>
+  <div class="timer" id="timer"></div>
+  <div class="used-tag" id="usedTag"></div>
+</div>
 
-        <!-- WORK.INK -->
-        <a class="btn btn-primary" href="https://work.ink/2wCd/playback-hub-key" target="_blank">
-            Continue with Work.ink
-        </a>
+<script>
+// ============================================
+// SECURITY CONFIG
+// ============================================
+const COOLDOWN_MINUTES = 5;
+const SESSION_KEY = 'pbhub_key_data';
 
-        <!-- LINKVERTISE -->
-        <a class="btn btn-secondary" href="https://link-target.net/5218671/bcY0wD5ss8F5" target="_blank">
-            Continue with Linkvertise
-        </a>
+const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk";
 
-        <p class="note">After completing the task, you will be redirected to the key page automatically.</p>
-        <p class="expires">Key expires in <span class="highlight">5 hours</span></p>
-    </div>
+// ============================================
+// SOURCE CHECK (must come from Linkvertise/Work.ink)
+// ============================================
+const urlParams = new URLSearchParams(window.location.search);
+const source = urlParams.get('source');
+
+if (source !== 'verified') {
+    document.body.innerHTML = '<div class="error"><h2>Access Denied</h2><p>Complete the task first at playbackhub-key.vercel.app</p></div>';
+    throw new Error('Unauthorized');
+}
+
+// ============================================
+// DEVICE FINGERPRINT (basic)
+// ============================================
+function getDeviceId() {
+    const raw = navigator.userAgent + screen.width + screen.height + navigator.language;
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+        const char = raw.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return 'dev_' + Math.abs(hash).toString(36).substring(0, 8);
+}
+
+// ============================================
+// GET/SET SESSION DATA
+// ============================================
+function getSessionData() {
+    try {
+        const raw = sessionStorage.getItem(SESSION_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
+}
+
+function setSessionData(data) {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+}
+
+// ============================================
+// GENERATE KEY
+// ============================================
+function makeKey() {
+    const part = () => Math.random().toString(36).substring(2, 6).toUpperCase();
+    return 'PBHUB-' + part() + '-' + part() + '-' + part();
+}
+
+// ============================================
+// SAVE TO SUPABASE (with device_id + used=false)
+// ============================================
+async function saveKeyToDB(key, deviceId) {
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 5);
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/key`, {
+        method: 'POST',
+        headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+            key: key,
+            expires_at: expires.toISOString(),
+            device_id: deviceId,
+            used: false,
+            created_at: new Date().toISOString()
+        })
+    });
+    return res.ok;
+}
+
+// ============================================
+// MAIN LOGIC (anti-refresh bypass)
+// ============================================
+async function main() {
+    const deviceId = getDeviceId();
+    const session = getSessionData();
+    const now = Date.now();
+
+    // CASE 1: May existing key sa session at hindi pa expired
+    if (session && session.key && session.deviceId === deviceId) {
+        const ageMinutes = (now - session.createdAt) / 60000;
+
+        if (ageMinutes < COOLDOWN_MINUTES) {
+            // Same session, same device, within cooldown = show SAME key
+            displayKey(session.key, session.expiresAt);
+            startCooldownTimer(COOLDOWN_MINUTES - ageMinutes);
+            return;
+        }
+    }
+
+    // CASE 2: Need new key
+    const key = makeKey();
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 5);
+
+    const saved = await saveKeyToDB(key, deviceId);
+    if (!saved) {
+        document.getElementById('keyText').textContent = 'Error. Try again.';
+        return;
+    }
+
+    // Save to sessionStorage (prevents refresh bypass)
+    setSessionData({
+        key: key,
+        deviceId: deviceId,
+        createdAt: now,
+        expiresAt: expires.toISOString()
+    });
+
+    displayKey(key, expires.toISOString());
+    startCooldownTimer(COOLDOWN_MINUTES);
+}
+
+function displayKey(key, expiresAt) {
+    document.getElementById('keyText').textContent = key;
+
+    // Show expiration
+    const exp = new Date(expiresAt);
+    const timeStr = exp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    document.getElementById('usedTag').textContent = 'Expires at ' + timeStr;
+}
+
+function startCooldownTimer(minutesLeft) {
+    const el = document.getElementById('timer');
+    let secs = Math.floor(minutesLeft * 60);
+
+    const tick = () => {
+        if (secs <= 0) {
+            el.textContent = 'You can refresh for a new key now';
+            return;
+        }
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        el.textContent = `Cooldown: ${m}m ${s}s (same key on refresh)`;
+        secs--;
+        setTimeout(tick, 1000);
+    };
+    tick();
+}
+
+function copyKey() {
+    const key = document.getElementById('keyText').textContent;
+    navigator.clipboard.writeText(key).then(() => {
+        const btn = document.querySelector('.btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy Key', 1500);
+    });
+}
+
+main();
+</script>
 </body>
 </html>
