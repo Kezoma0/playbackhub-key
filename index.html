@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playback Hub - Get Key</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0a12;
             color: #fff;
@@ -49,16 +45,8 @@
             50% { transform: translateY(-4px) rotate(0deg); }
             75% { transform: translateY(-10px) rotate(-5deg); }
         }
-        h1 {
-            margin: 0 0 8px;
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .subtitle {
-            color: #888;
-            font-size: 14px;
-            margin: 0 0 28px;
-        }
+        h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; }
+        .subtitle { color: #888; font-size: 14px; margin: 0 0 28px; }
         .btn {
             display: block;
             width: 100%;
@@ -72,41 +60,22 @@
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
+        .btn:hover { transform: translateY(-2px); }
         .btn-primary {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             color: #fff;
             box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
         }
-        .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-        }
+        .btn-primary:hover { box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
         .btn-secondary {
             background: #252538;
             color: #ccc;
             border: 1px solid #3a3a50;
         }
-        .btn-secondary:hover {
-            background: #303048;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .note {
-            color: #666;
-            font-size: 12px;
-            margin-top: 18px;
-            line-height: 1.5;
-        }
-        .expires {
-            color: #888;
-            font-size: 13px;
-            margin-top: 12px;
-        }
-        .highlight {
-            color: #ec4899;
-            font-weight: 600;
-        }
+        .btn-secondary:hover { background: #303048; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .note { color: #666; font-size: 12px; margin-top: 18px; line-height: 1.5; }
+        .expires { color: #888; font-size: 13px; margin-top: 12px; }
+        .highlight { color: #ec4899; font-weight: 600; }
     </style>
 <base target="_blank">
 </head>
@@ -118,11 +87,11 @@
         <h1>Playback Hub</h1>
         <p class="subtitle">Complete a task to get your free key</p>
 
-        <a class="btn btn-primary" href="https://work.ink/2wCd/playback-hub-key" target="_blank" onclick="grantAccess()">
+        <a class="btn btn-primary" href="https://work.ink/2wCd/playback-hub-key" onclick="return grantAccess(this.href);">
             Continue with Work.ink
         </a>
 
-        <a class="btn btn-secondary" href="https://link-target.net/5218671/bcY0wD5ss8F5" target="_blank" onclick="grantAccess()">
+        <a class="btn btn-secondary" href="https://link-target.net/5218671/bcY0wD5ss8F5" onclick="return grantAccess(this.href);">
             Continue with Linkvertise
         </a>
 
@@ -131,8 +100,11 @@
     </div>
 
     <script>
-        function grantAccess() {
+        function grantAccess(url) {
             localStorage.setItem('pbhub_gate', Date.now().toString());
+            localStorage.setItem('pbhub_gate_url', url);
+            window.open(url, '_blank');
+            return false;
         }
     </script>
 </body>
