@@ -217,7 +217,6 @@
         // ANTI-BYPASS: VERIFY SOURCE
         // ============================================
         function verifyAccess() {
-            // Check 1: Referrer must be from allowed sources
             const ref = document.referrer.toLowerCase();
             const allowedRefs = [
                 "linkvertise",
@@ -226,17 +225,10 @@
                 "link-target.net"
             ];
             const hasValidRef = allowedRefs.some(domain => ref.includes(domain));
-
-            // Check 2: Session must be started from index.html
             const sessionStarted = sessionStorage.getItem("pbhub_started");
             const hasValidSession = sessionStarted !== null;
-
-            // Check 3: Must complete within 10 minutes of clicking
-            const timeLimit = 10 * 60 * 1000; // 10 minutes
+            const timeLimit = 10 * 60 * 1000;
             const isWithinTime = sessionStarted && (Date.now() - parseInt(sessionStarted) < timeLimit);
-
-            // For testing: allow if any check passes
-            // For production: require hasValidRef || (hasValidSession && isWithinTime)
             return hasValidRef || (hasValidSession && isWithinTime);
         }
 
@@ -263,26 +255,33 @@
         }
 
         // ============================================
-        // COUNTDOWN TIMER
+        // COUNTDOWN TIMER (uses actual expiry time)
         // ============================================
-        let expiryTime;
-        function startCountdown() {
-            expiryTime = new Date();
-            expiryTime.setHours(expiryTime.getHours() + 5);
+        let countdownInterval;
+        function startCountdown(expiryISO) {
+            // Clear any existing interval
+            if (countdownInterval) clearInterval(countdownInterval);
 
-            setInterval(() => {
+            const expiryTime = new Date(expiryISO);
+            const el = document.getElementById("countdown");
+
+            function update() {
                 const now = new Date();
                 const diff = expiryTime - now;
                 if (diff <= 0) {
-                    document.getElementById("countdown").textContent = "EXPIRED";
+                    el.textContent = "EXPIRED";
+                    el.style.color = "#ff5555";
+                    clearInterval(countdownInterval);
                     return;
                 }
                 const h = Math.floor(diff / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById("countdown").textContent =
-                    h + "h " + (m<10?"0":"") + m + "m " + (s<10?"0":"") + s + "s";
-            }, 1000);
+                el.textContent = h + "h " + (m<10?"0":"") + m + "m " + (s<10?"0":"") + s + "s";
+            }
+
+            update(); // run immediately
+            countdownInterval = setInterval(update, 1000);
         }
 
         // ============================================
@@ -333,29 +332,26 @@
         // MAIN INIT
         // ============================================
         async function init() {
-            // ANTI-BYPASS: Check if access is valid
             if (!verifyAccess()) {
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("errorState").style.display = "block";
                 return;
             }
 
-            // ANTI-REFRESH-ABUSE: Check if key already exists in this session
             const existingKey = sessionStorage.getItem("pbhub_key");
             const existingExpiry = sessionStorage.getItem("pbhub_key_expiry");
 
             let displayKey, displayExpiry;
 
             if (existingKey && existingExpiry) {
-                // User refreshed - show SAME key
+                // Refresh: use SAME key and SAME expiry
                 displayKey = existingKey;
                 displayExpiry = existingExpiry;
             } else {
-                // First visit - generate NEW key
+                // First visit: generate NEW key
                 displayKey = generateKey();
                 displayExpiry = getExpiryISO();
 
-                // Save to Supabase
                 try {
                     const saved = await saveKeyToSupabase(displayKey, displayExpiry);
                     if (!saved) throw new Error("Failed to save");
@@ -368,7 +364,6 @@
                     return;
                 }
 
-                // Save to sessionStorage (prevents refresh abuse)
                 sessionStorage.setItem("pbhub_key", displayKey);
                 sessionStorage.setItem("pbhub_key_expiry", displayExpiry);
             }
@@ -377,10 +372,11 @@
             document.getElementById("loadingState").style.display = "none";
             document.getElementById("keyState").style.display = "block";
             document.getElementById("keyDisplay").textContent = displayKey;
-            startCountdown();
+
+            // FIX: Use the ACTUAL expiry time for countdown (not new Date() + 5h)
+            startCountdown(displayExpiry);
         }
 
-        // Run
         init();
     </script>
 </body>
