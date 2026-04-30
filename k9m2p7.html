@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playback Hub - Your Key</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0a12;
             color: #fff;
@@ -54,16 +50,8 @@
             50% { transform: translateY(-4px) rotate(0deg); }
             75% { transform: translateY(-10px) rotate(-5deg); }
         }
-        h1 {
-            margin: 0 0 8px;
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .subtitle {
-            color: #888;
-            font-size: 14px;
-            margin: 0 0 24px;
-        }
+        h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; }
+        .subtitle { color: #888; font-size: 14px; margin: 0 0 24px; }
         .key-box {
             background: #0d0d18;
             border: 2px solid #3a3a5a;
@@ -117,30 +105,19 @@
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
+        .btn:hover { transform: translateY(-2px); }
         .btn-copy {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             color: #fff;
             box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
         }
-        .btn-copy:hover {
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-        }
+        .btn-copy:hover { box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
         .btn-copy.copied {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
         }
-        .timer {
-            color: #888;
-            font-size: 13px;
-            margin-top: 14px;
-        }
-        .timer span {
-            color: #ec4899;
-            font-weight: 600;
-        }
+        .timer { color: #888; font-size: 13px; margin-top: 14px; }
+        .timer span { color: #ec4899; font-weight: 600; }
         .warning {
             color: #666;
             font-size: 11px;
@@ -150,9 +127,14 @@
         }
         .error-box {
             color: #ff5555;
-            font-size: 14px;
-            padding: 20px;
+            font-size: 13px;
+            padding: 16px;
+            background: rgba(255,50,50,0.08);
+            border-radius: 8px;
+            margin-top: 12px;
+            word-break: break-all;
         }
+        .error-box .err-title { font-weight: 700; margin-bottom: 6px; }
         .loading {
             display: inline-block;
             width: 24px;
@@ -171,13 +153,13 @@
             font-size: 16px;
             padding: 30px 20px;
         }
-        .blocked p {
-            margin-bottom: 16px;
-        }
-        .blocked a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
+        .blocked p { margin-bottom: 16px; }
+        .blocked a { color: #6366f1; text-decoration: none; font-weight: 600; }
+        .debug-info {
+            color: #444;
+            font-size: 10px;
+            margin-top: 12px;
+            font-family: monospace;
         }
     </style>
 <base target="_blank">
@@ -223,54 +205,53 @@
             </div>
 
             <div id="errorState" style="display:none;" class="error-box">
-                ❌ Failed to generate key. Please try again.
+                <div class="err-title">❌ Failed to generate key</div>
+                <div id="errorDetail">Please try again.</div>
+                <div class="debug-info" id="debugInfo"></div>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // ANTI-BYPASS GATE
+        // ANTI-BYPASS GATE (LENIENT)
         // ============================================
         const GATE_KEY = 'pbhub_gate';
-        const GATE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+        const GATE_TIMEOUT = 30 * 60 * 1000;
 
         function checkGate() {
-            const gate = localStorage.getItem(GATE_KEY);
             const urlParams = new URLSearchParams(window.location.search);
             const hasSource = urlParams.has('source');
 
-            if (!gate) {
-                return false;
+            // PRIMARY: Check source param (from Linkvertise/Work.ink redirect)
+            if (hasSource) {
+                // Also set gate for future refreshes
+                localStorage.setItem(GATE_KEY, Date.now().toString());
+                return true;
             }
 
-            const gateTime = parseInt(gate);
-            const now = Date.now();
-
-            // Gate expired (older than 30 min)
-            if ((now - gateTime) > GATE_TIMEOUT) {
+            // SECONDARY: Check localStorage gate
+            const gate = localStorage.getItem(GATE_KEY);
+            if (gate) {
+                const gateTime = parseInt(gate);
+                const now = Date.now();
+                if ((now - gateTime) <= GATE_TIMEOUT) {
+                    return true;
+                }
                 localStorage.removeItem(GATE_KEY);
-                return false;
             }
 
-            // Also check if source param exists (basic check)
-            if (!hasSource) {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        // Run gate check immediately
+        // Run gate check
         if (!checkGate()) {
             document.getElementById('contentState').style.display = 'none';
             document.getElementById('blockedState').style.display = 'block';
-            // Optional: auto-redirect after 3 seconds
             setTimeout(function() {
                 window.location.href = 'index.html';
             }, 3000);
         } else {
-            // Gate valid, proceed
             init();
         }
 
@@ -309,7 +290,6 @@
         function startCountdown() {
             expiryTime = new Date();
             expiryTime.setHours(expiryTime.getHours() + 5);
-
             setInterval(function() {
                 const now = new Date();
                 const diff = expiryTime - now;
@@ -321,28 +301,38 @@
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
                 document.getElementById("countdown").textContent =
-                    h + "h " + (m < 10 ? "0" : "") + m + "m " + (s < 10 ? "0" : "") + s + "s";
+                    h + "h " + (m < 10 ? "0" : "" ) + m + "m " + (s < 10 ? "0" : "") + s + "s";
             }, 1000);
         }
 
         // ============================================
-        // SAVE KEY TO SUPABASE
+        // SAVE KEY TO SUPABASE (with detailed error)
         // ============================================
         async function saveKeyToSupabase(key, expiresAt) {
-            const response = await fetch(SUPABASE_URL + "/rest/v1/key", {
-                method: "POST",
-                headers: {
-                    "apikey": SUPABASE_ANON,
-                    "Authorization": "Bearer " + SUPABASE_ANON,
-                    "Content-Type": "application/json",
-                    "Prefer": "return=minimal"
-                },
-                body: JSON.stringify({
-                    key: key,
-                    expires_at: expiresAt
-                })
-            });
-            return response.ok;
+            try {
+                const response = await fetch(SUPABASE_URL + "/rest/v1/key", {
+                    method: "POST",
+                    headers: {
+                        "apikey": SUPABASE_ANON,
+                        "Authorization": "Bearer " + SUPABASE_ANON,
+                        "Content-Type": "application/json",
+                        "Prefer": "return=minimal"
+                    },
+                    body: JSON.stringify({
+                        key: key,
+                        expires_at: expiresAt
+                    })
+                });
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    return { ok: false, error: "HTTP " + response.status + ": " + errText };
+                }
+                return { ok: true };
+
+            } catch (err) {
+                return { ok: false, error: err.message };
+            }
         }
 
         // ============================================
@@ -383,21 +373,19 @@
             const newKey = generateKey();
             const expiresAt = getExpiryISO();
 
-            try {
-                const saved = await saveKeyToSupabase(newKey, expiresAt);
-                if (!saved) {
-                    throw new Error("Failed to save");
-                }
+            const result = await saveKeyToSupabase(newKey, expiresAt);
 
+            if (result.ok) {
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("keyState").style.display = "block";
                 document.getElementById("keyDisplay").textContent = newKey;
                 startCountdown();
-
-            } catch (err) {
-                console.error(err);
+            } else {
+                console.error("Supabase Error:", result.error);
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("errorState").style.display = "block";
+                document.getElementById("errorDetail").textContent = result.error;
+                document.getElementById("debugInfo").textContent = "Key: " + newKey + " | Expires: " + expiresAt;
             }
         }
     </script>
