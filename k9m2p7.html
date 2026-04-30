@@ -9,7 +9,7 @@
         body {
             background: #0a0a12;
             color: #fff;
-            font-family: "Segoe UI", system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -41,7 +41,7 @@
             font-size: 42px;
             display: inline-block;
             animation: keyFloat 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 12px rgba(236,72,153,0.5));
+            filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.5));
         }
         @keyframes keyFloat {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -61,10 +61,12 @@
             overflow: hidden;
         }
         .key-box::before {
-            content: "";
+            content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
             animation: shimmer 2s infinite;
         }
@@ -73,7 +75,7 @@
             100% { left: 100%; }
         }
         .key-text {
-            font-family: "Courier New", monospace;
+            font-family: 'Courier New', monospace;
             font-size: 20px;
             font-weight: 700;
             color: #ec4899;
@@ -106,24 +108,15 @@
         .btn-copy {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             color: #fff;
-            box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
         }
-        .btn-copy:hover {
-            box-shadow: 0 6px 20px rgba(99,102,241,0.5);
-        }
+        .btn-copy:hover { box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
         .btn-copy.copied {
             background: linear-gradient(135deg, #22c55e, #16a34a);
-            box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
         }
-        .timer {
-            color: #888;
-            font-size: 13px;
-            margin-top: 14px;
-        }
-        .timer span {
-            color: #ec4899;
-            font-weight: 600;
-        }
+        .timer { color: #888; font-size: 13px; margin-top: 14px; }
+        .timer span { color: #ec4899; font-weight: 600; }
         .warning {
             color: #666;
             font-size: 11px;
@@ -135,6 +128,26 @@
             color: #ff5555;
             font-size: 14px;
             padding: 20px;
+        }
+        .error-box h2 {
+            color: #ff5555;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .error-box p {
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .error-box a {
+            display: inline-block;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
         }
         .loading {
             display: inline-block;
@@ -154,40 +167,42 @@
 </head>
 <body>
     <div class="box" id="mainBox">
-        <div class="key-wrapper">
-            <span class="key-icon">🔑</span>
-        </div>
-        <h1>Playback Hub</h1>
-        <p class="subtitle" id="subText">Your key is ready!</p>
-
+        <!-- LOADING STATE -->
         <div id="loadingState">
-            <div class="loading"></div>
-            <p style="color:#888; margin-top:12px; font-size:13px;">Verifying session...</p>
+            <div class="key-wrapper"><span class="key-icon">🔑</span></div>
+            <h1>Playback Hub</h1>
+            <div class="loading" style="margin-top:20px;"></div>
+            <p style="color:#888; margin-top:12px; font-size:13px;">Verifying access...</p>
         </div>
 
+        <!-- KEY STATE -->
         <div id="keyState" style="display:none;">
+            <div class="key-wrapper"><span class="key-icon">🔑</span></div>
+            <h1>Playback Hub</h1>
+            <p class="subtitle">Your key is ready!</p>
+
             <div class="key-label">Your One-Time Key</div>
             <div class="key-box">
                 <div class="key-text" id="keyDisplay">---</div>
             </div>
+
             <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">
                 📋 Copy Key
             </button>
-            <p class="timer">
-                Expires in: <span id="countdown">5h 00m 00s</span>
-            </p>
+
+            <p class="timer">Expires in: <span id="countdown">5h 00m 00s</span></p>
+
             <p class="warning">
-                ⚠️ This key is unique to this session.
-                <br>Refreshing will NOT generate a new key.
-                <br>Close this tab and complete the task again for a new key.
+                ⚠️ This key is unique to this session. Refreshing will show the same key.<br>
+                Old keys will expire automatically after 5 hours.
             </p>
         </div>
 
+        <!-- ERROR STATE (Bypass detected) -->
         <div id="errorState" style="display:none;" class="error-box">
-            ❌ Access denied. Please complete the task first.<br><br>
-            <a href="https://playbackhub-key.vercel.app" style="color:#6366f1; text-decoration:none; font-weight:700;">
-                ← Go to Landing Page
-            </a>
+            <h2>🚫 Access Denied</h2>
+            <p>You must complete the task first to get a key.</p>
+            <a href="/">Go Back</a>
         </div>
     </div>
 
@@ -199,14 +214,31 @@
         const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk";
 
         // ============================================
-        // SECURITY: CHECK IF THEY CAME FROM TASK
+        // ANTI-BYPASS: VERIFY SOURCE
         // ============================================
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasVerified = urlParams.get("source") === "verified";
+        function verifyAccess() {
+            // Check 1: Referrer must be from allowed sources
+            const ref = document.referrer.toLowerCase();
+            const allowedRefs = [
+                "linkvertise",
+                "work.ink",
+                "playbackhub-key.vercel.app",
+                "link-target.net"
+            ];
+            const hasValidRef = allowedRefs.some(domain => ref.includes(domain));
 
-        // Check sessionStorage if they already have a key this session
-        const storedKey = sessionStorage.getItem("pbhub_key");
-        const storedExpiry = sessionStorage.getItem("pbhub_expiry");
+            // Check 2: Session must be started from index.html
+            const sessionStarted = sessionStorage.getItem("pbhub_started");
+            const hasValidSession = sessionStarted !== null;
+
+            // Check 3: Must complete within 10 minutes of clicking
+            const timeLimit = 10 * 60 * 1000; // 10 minutes
+            const isWithinTime = sessionStarted && (Date.now() - parseInt(sessionStarted) < timeLimit);
+
+            // For testing: allow if any check passes
+            // For production: require hasValidRef || (hasValidSession && isWithinTime)
+            return hasValidRef || (hasValidSession && isWithinTime);
+        }
 
         // ============================================
         // KEY GENERATOR
@@ -230,32 +262,26 @@
             return now.toISOString();
         }
 
-        function getExpiryTime() {
-            const now = new Date();
-            now.setHours(now.getHours() + 5);
-            return now.getTime();
-        }
-
         // ============================================
         // COUNTDOWN TIMER
         // ============================================
-        let timerInterval;
-        function startCountdown(targetTime) {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const diff = targetTime - now;
+        let expiryTime;
+        function startCountdown() {
+            expiryTime = new Date();
+            expiryTime.setHours(expiryTime.getHours() + 5);
+
+            setInterval(() => {
+                const now = new Date();
+                const diff = expiryTime - now;
                 if (diff <= 0) {
                     document.getElementById("countdown").textContent = "EXPIRED";
-                    document.getElementById("subText").textContent = "This key has expired!";
-                    document.getElementById("subText").style.color = "#ff5555";
                     return;
                 }
                 const h = Math.floor(diff / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById("countdown").textContent = 
-                    h + "h " + (m < 10 ? "0" : "") + m + "m " + (s < 10 ? "0" : "") + s + "s";
+                document.getElementById("countdown").textContent =
+                    h + "h " + (m<10?"0":"") + m + "m " + (s<10?"0":"") + s + "s";
             }, 1000);
         }
 
@@ -304,61 +330,57 @@
         }
 
         // ============================================
-        // MAIN: SECURE INIT
+        // MAIN INIT
         // ============================================
         async function init() {
-            // SECURITY CHECK: Must have ?source=verified
-            if (!hasVerified) {
+            // ANTI-BYPASS: Check if access is valid
+            if (!verifyAccess()) {
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("errorState").style.display = "block";
                 return;
             }
 
-            // If they already have a key this session, show it (NO new key on refresh)
-            if (storedKey && storedExpiry) {
-                const expiryTime = parseInt(storedExpiry);
-                const now = new Date().getTime();
-                
-                // Check if stored key is still valid
-                if (now < expiryTime) {
+            // ANTI-REFRESH-ABUSE: Check if key already exists in this session
+            const existingKey = sessionStorage.getItem("pbhub_key");
+            const existingExpiry = sessionStorage.getItem("pbhub_key_expiry");
+
+            let displayKey, displayExpiry;
+
+            if (existingKey && existingExpiry) {
+                // User refreshed - show SAME key
+                displayKey = existingKey;
+                displayExpiry = existingExpiry;
+            } else {
+                // First visit - generate NEW key
+                displayKey = generateKey();
+                displayExpiry = getExpiryISO();
+
+                // Save to Supabase
+                try {
+                    const saved = await saveKeyToSupabase(displayKey, displayExpiry);
+                    if (!saved) throw new Error("Failed to save");
+                } catch (err) {
+                    console.error(err);
                     document.getElementById("loadingState").style.display = "none";
-                    document.getElementById("keyState").style.display = "block";
-                    document.getElementById("keyDisplay").textContent = storedKey;
-                    startCountdown(expiryTime);
+                    document.getElementById("errorState").style.display = "block";
+                    document.querySelector("#errorState h2").textContent = "❌ Server Error";
+                    document.querySelector("#errorState p").textContent = "Failed to generate key. Please try again.";
                     return;
                 }
-                // If expired, clear and continue to generate new
-                sessionStorage.removeItem("pbhub_key");
-                sessionStorage.removeItem("pbhub_expiry");
+
+                // Save to sessionStorage (prevents refresh abuse)
+                sessionStorage.setItem("pbhub_key", displayKey);
+                sessionStorage.setItem("pbhub_key_expiry", displayExpiry);
             }
 
-            // Generate NEW key (only once per session)
-            const newKey = generateKey();
-            const expiresAt = getExpiryISO();
-            const expiryTime = getExpiryTime();
-
-            try {
-                const saved = await saveKeyToSupabase(newKey, expiresAt);
-                if (!saved) throw new Error("Failed to save");
-
-                // Store in sessionStorage so refresh wont generate new
-                sessionStorage.setItem("pbhub_key", newKey);
-                sessionStorage.setItem("pbhub_expiry", expiryTime.toString());
-
-                document.getElementById("loadingState").style.display = "none";
-                document.getElementById("keyState").style.display = "block";
-                document.getElementById("keyDisplay").textContent = newKey;
-                startCountdown(expiryTime);
-            } catch (err) {
-                console.error(err);
-                document.getElementById("loadingState").style.display = "none";
-                document.getElementById("errorState").style.display = "block";
-                document.getElementById("errorState").innerHTML = 
-                    "❌ Failed to generate key. Please try again.<br><br>" +
-                    "<a href="https://playbackhub-key.vercel.app" style="color:#6366f1; text-decoration:none; font-weight:700;">← Go to Landing Page</a>";
-            }
+            // Show key
+            document.getElementById("loadingState").style.display = "none";
+            document.getElementById("keyState").style.display = "block";
+            document.getElementById("keyDisplay").textContent = displayKey;
+            startCountdown();
         }
 
+        // Run
         init();
     </script>
 </body>
