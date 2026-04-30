@@ -9,12 +9,11 @@
         body {
             background: #0a0a12;
             color: #fff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: "Segoe UI", system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
         }
         .box {
             background: #151528;
@@ -42,7 +41,7 @@
             font-size: 42px;
             display: inline-block;
             animation: keyFloat 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.5));
+            filter: drop-shadow(0 0 12px rgba(236,72,153,0.5));
         }
         @keyframes keyFloat {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -62,12 +61,10 @@
             overflow: hidden;
         }
         .key-box::before {
-            content: '';
+            content: "";
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
             animation: shimmer 2s infinite;
         }
@@ -76,7 +73,7 @@
             100% { left: 100%; }
         }
         .key-text {
-            font-family: 'Courier New', monospace;
+            font-family: "Courier New", monospace;
             font-size: 20px;
             font-weight: 700;
             color: #ec4899;
@@ -109,15 +106,24 @@
         .btn-copy {
             background: linear-gradient(135deg, #6366f1, #ec4899);
             color: #fff;
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 16px rgba(99,102,241,0.3);
         }
-        .btn-copy:hover { box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
+        .btn-copy:hover {
+            box-shadow: 0 6px 20px rgba(99,102,241,0.5);
+        }
         .btn-copy.copied {
             background: linear-gradient(135deg, #22c55e, #16a34a);
-            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+            box-shadow: 0 4px 16px rgba(34,197,94,0.3);
         }
-        .timer { color: #888; font-size: 13px; margin-top: 14px; }
-        .timer span { color: #ec4899; font-weight: 600; }
+        .timer {
+            color: #888;
+            font-size: 13px;
+            margin-top: 14px;
+        }
+        .timer span {
+            color: #ec4899;
+            font-weight: 600;
+        }
         .warning {
             color: #666;
             font-size: 11px;
@@ -127,14 +133,9 @@
         }
         .error-box {
             color: #ff5555;
-            font-size: 13px;
-            padding: 16px;
-            background: rgba(255,50,50,0.08);
-            border-radius: 8px;
-            margin-top: 12px;
-            word-break: break-all;
+            font-size: 14px;
+            padding: 20px;
         }
-        .error-box .err-title { font-weight: 700; margin-bottom: 6px; }
         .loading {
             display: inline-block;
             width: 24px;
@@ -148,103 +149,64 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .blocked {
-            color: #ff5555;
-            font-size: 16px;
-            padding: 30px 20px;
-        }
-        .blocked p { margin-bottom: 16px; }
-        .blocked a { color: #6366f1; text-decoration: none; font-weight: 600; }
-        .debug-info {
-            color: #444;
-            font-size: 10px;
-            margin-top: 12px;
-            font-family: monospace;
-        }
     </style>
 <base target="_blank">
 </head>
 <body>
     <div class="box" id="mainBox">
-        <div id="blockedState" style="display:none;" class="blocked">
-            <p>🚫 Access Denied</p>
-            <p style="font-size:13px; color:#888;">You must complete a task first to get a key.</p>
-            <a href="index.html">Go to Landing Page</a>
+        <div class="key-wrapper">
+            <span class="key-icon">🔑</span>
+        </div>
+        <h1>Playback Hub</h1>
+        <p class="subtitle" id="subText">Your key is ready!</p>
+
+        <div id="loadingState">
+            <div class="loading"></div>
+            <p style="color:#888; margin-top:12px; font-size:13px;">Verifying session...</p>
         </div>
 
-        <div id="contentState">
-            <div class="key-wrapper">
-                <span class="key-icon">🔑</span>
+        <div id="keyState" style="display:none;">
+            <div class="key-label">Your One-Time Key</div>
+            <div class="key-box">
+                <div class="key-text" id="keyDisplay">---</div>
             </div>
-            <h1>Playback Hub</h1>
-            <p class="subtitle">Your key is ready!</p>
+            <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">
+                📋 Copy Key
+            </button>
+            <p class="timer">
+                Expires in: <span id="countdown">5h 00m 00s</span>
+            </p>
+            <p class="warning">
+                ⚠️ This key is unique to this session.
+                <br>Refreshing will NOT generate a new key.
+                <br>Close this tab and complete the task again for a new key.
+            </p>
+        </div>
 
-            <div id="loadingState">
-                <div class="loading"></div>
-                <p style="color:#888; margin-top:12px; font-size:13px;">Generating secure key...</p>
-            </div>
-
-            <div id="keyState" style="display:none;">
-                <div class="key-label">Your One-Time Key</div>
-                <div class="key-box">
-                    <div class="key-text" id="keyDisplay">---</div>
-                </div>
-
-                <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">
-                    📋 Copy Key
-                </button>
-
-                <p class="timer">
-                    Expires in: <span id="countdown">5h 00m 00s</span>
-                </p>
-
-                <p class="warning">
-                    ⚠️ This key is unique to this session. Refreshing will generate a new key.
-                    <br>Old keys will expire automatically.
-                </p>
-            </div>
-
-            <div id="errorState" style="display:none;" class="error-box">
-                <div class="err-title">❌ Failed to generate key</div>
-                <div id="errorDetail">Please try again.</div>
-                <div class="debug-info" id="debugInfo"></div>
-            </div>
+        <div id="errorState" style="display:none;" class="error-box">
+            ❌ Access denied. Please complete the task first.<br><br>
+            <a href="https://playbackhub-key.vercel.app" style="color:#6366f1; text-decoration:none; font-weight:700;">
+                ← Go to Landing Page
+            </a>
         </div>
     </div>
 
     <script>
         // ============================================
-        // SUPABASE CONFIG (NASA TAAS NA - FIX TDZ)
+        // SUPABASE CONFIG
         // ============================================
         const SUPABASE_URL = "https://zrxgabdxbczqhfiokulk.supabase.co";
         const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyeGdhYmR4YmN6cWhmaW9rdWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2NzIyOTYsImV4cCI6MjA5MjI0ODI5Nn0.XgE4vatPcwOHiYf_8euMxUJw9NhAu8-7-KS7dEcuhSk";
 
         // ============================================
-        // ANTI-BYPASS GATE
+        // SECURITY: CHECK IF THEY CAME FROM TASK
         // ============================================
-        const GATE_KEY = 'pbhub_gate';
-        const GATE_TIMEOUT = 30 * 60 * 1000;
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasVerified = urlParams.get("source") === "verified";
 
-        function checkGate() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const hasSource = urlParams.has('source');
-
-            if (hasSource) {
-                localStorage.setItem(GATE_KEY, Date.now().toString());
-                return true;
-            }
-
-            const gate = localStorage.getItem(GATE_KEY);
-            if (gate) {
-                const gateTime = parseInt(gate);
-                const now = Date.now();
-                if ((now - gateTime) <= GATE_TIMEOUT) {
-                    return true;
-                }
-                localStorage.removeItem(GATE_KEY);
-            }
-            return false;
-        }
+        // Check sessionStorage if they already have a key this session
+        const storedKey = sessionStorage.getItem("pbhub_key");
+        const storedExpiry = sessionStorage.getItem("pbhub_expiry");
 
         // ============================================
         // KEY GENERATOR
@@ -268,25 +230,32 @@
             return now.toISOString();
         }
 
+        function getExpiryTime() {
+            const now = new Date();
+            now.setHours(now.getHours() + 5);
+            return now.getTime();
+        }
+
         // ============================================
         // COUNTDOWN TIMER
         // ============================================
-        let expiryTime;
-        function startCountdown() {
-            expiryTime = new Date();
-            expiryTime.setHours(expiryTime.getHours() + 5);
-            setInterval(function() {
-                const now = new Date();
-                const diff = expiryTime - now;
+        let timerInterval;
+        function startCountdown(targetTime) {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const diff = targetTime - now;
                 if (diff <= 0) {
                     document.getElementById("countdown").textContent = "EXPIRED";
+                    document.getElementById("subText").textContent = "This key has expired!";
+                    document.getElementById("subText").style.color = "#ff5555";
                     return;
                 }
                 const h = Math.floor(diff / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById("countdown").textContent =
-                    h + "h " + (m < 10 ? "0" : "" ) + m + "m " + (s < 10 ? "0" : "") + s + "s";
+                document.getElementById("countdown").textContent = 
+                    h + "h " + (m < 10 ? "0" : "") + m + "m " + (s < 10 ? "0" : "") + s + "s";
             }, 1000);
         }
 
@@ -294,30 +263,20 @@
         // SAVE KEY TO SUPABASE
         // ============================================
         async function saveKeyToSupabase(key, expiresAt) {
-            try {
-                const response = await fetch(SUPABASE_URL + "/rest/v1/key", {
-                    method: "POST",
-                    headers: {
-                        "apikey": SUPABASE_ANON,
-                        "Authorization": "Bearer " + SUPABASE_ANON,
-                        "Content-Type": "application/json",
-                        "Prefer": "return=minimal"
-                    },
-                    body: JSON.stringify({
-                        key: key,
-                        expires_at: expiresAt
-                    })
-                });
-
-                if (!response.ok) {
-                    const errText = await response.text();
-                    return { ok: false, error: "HTTP " + response.status + ": " + errText };
-                }
-                return { ok: true };
-
-            } catch (err) {
-                return { ok: false, error: err.message };
-            }
+            const response = await fetch(SUPABASE_URL + "/rest/v1/key", {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_ANON,
+                    "Authorization": "Bearer " + SUPABASE_ANON,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({
+                    key: key,
+                    expires_at: expiresAt
+                })
+            });
+            return response.ok;
         }
 
         // ============================================
@@ -327,13 +286,6 @@
             const keyText = document.getElementById("keyDisplay").textContent;
             try {
                 await navigator.clipboard.writeText(keyText);
-                const btn = document.getElementById("copyBtn");
-                btn.textContent = "✅ Copied!";
-                btn.classList.add("copied");
-                setTimeout(function() {
-                    btn.textContent = "📋 Copy Key";
-                    btn.classList.remove("copied");
-                }, 2000);
             } catch (err) {
                 const ta = document.createElement("textarea");
                 ta.value = keyText;
@@ -341,51 +293,73 @@
                 ta.select();
                 document.execCommand("copy");
                 document.body.removeChild(ta);
-                const btn = document.getElementById("copyBtn");
-                btn.textContent = "✅ Copied!";
-                btn.classList.add("copied");
-                setTimeout(function() {
-                    btn.textContent = "📋 Copy Key";
-                    btn.classList.remove("copied");
-                }, 2000);
             }
+            const btn = document.getElementById("copyBtn");
+            btn.textContent = "✅ Copied!";
+            btn.classList.add("copied");
+            setTimeout(() => {
+                btn.textContent = "📋 Copy Key";
+                btn.classList.remove("copied");
+            }, 2000);
         }
 
         // ============================================
-        // MAIN: GENERATE & SAVE
+        // MAIN: SECURE INIT
         // ============================================
         async function init() {
+            // SECURITY CHECK: Must have ?source=verified
+            if (!hasVerified) {
+                document.getElementById("loadingState").style.display = "none";
+                document.getElementById("errorState").style.display = "block";
+                return;
+            }
+
+            // If they already have a key this session, show it (NO new key on refresh)
+            if (storedKey && storedExpiry) {
+                const expiryTime = parseInt(storedExpiry);
+                const now = new Date().getTime();
+                
+                // Check if stored key is still valid
+                if (now < expiryTime) {
+                    document.getElementById("loadingState").style.display = "none";
+                    document.getElementById("keyState").style.display = "block";
+                    document.getElementById("keyDisplay").textContent = storedKey;
+                    startCountdown(expiryTime);
+                    return;
+                }
+                // If expired, clear and continue to generate new
+                sessionStorage.removeItem("pbhub_key");
+                sessionStorage.removeItem("pbhub_expiry");
+            }
+
+            // Generate NEW key (only once per session)
             const newKey = generateKey();
             const expiresAt = getExpiryISO();
+            const expiryTime = getExpiryTime();
 
-            const result = await saveKeyToSupabase(newKey, expiresAt);
+            try {
+                const saved = await saveKeyToSupabase(newKey, expiresAt);
+                if (!saved) throw new Error("Failed to save");
 
-            if (result.ok) {
+                // Store in sessionStorage so refresh wont generate new
+                sessionStorage.setItem("pbhub_key", newKey);
+                sessionStorage.setItem("pbhub_expiry", expiryTime.toString());
+
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("keyState").style.display = "block";
                 document.getElementById("keyDisplay").textContent = newKey;
-                startCountdown();
-            } else {
-                console.error("Supabase Error:", result.error);
+                startCountdown(expiryTime);
+            } catch (err) {
+                console.error(err);
                 document.getElementById("loadingState").style.display = "none";
                 document.getElementById("errorState").style.display = "block";
-                document.getElementById("errorDetail").textContent = result.error;
-                document.getElementById("debugInfo").textContent = "Key: " + newKey + " | Expires: " + expiresAt;
+                document.getElementById("errorState").innerHTML = 
+                    "❌ Failed to generate key. Please try again.<br><br>" +
+                    "<a href="https://playbackhub-key.vercel.app" style="color:#6366f1; text-decoration:none; font-weight:700;">← Go to Landing Page</a>";
             }
         }
 
-        // ============================================
-        // RUN GATE CHECK THEN INIT
-        // ============================================
-        if (!checkGate()) {
-            document.getElementById('contentState').style.display = 'none';
-            document.getElementById('blockedState').style.display = 'block';
-            setTimeout(function() {
-                window.location.href = 'index.html';
-            }, 3000);
-        } else {
-            init();
-        }
+        init();
     </script>
 </body>
 </html>
